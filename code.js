@@ -439,6 +439,7 @@ function createCategoryCard(category, amt, time) {
   expenseLi.className = "listdiv";
   const list = document.createElement("select"); //sub child 1
   list.className = "list";
+  list.id = "expenseSelect";
   renderOptCategory(list, category);
   expenseLi.appendChild(list);
 
@@ -459,11 +460,11 @@ function createCategoryCard(category, amt, time) {
   const amtPara = document.createElement("p");
   amtPara.className = "exp amount";
   amtPara.innerText = `₹ ${amt}`; //category final amt is yet to be added
-  amtPara.id = category; //dynamic id
+  amtPara.id = "amount-display";
   expenseDetails.appendChild(amtPara);
   const span = document.createElement("span");
   span.className = "d-t";
-  span.id = `${category}-time`; //time is yet to be aded
+  span.id = "time-display"; //time is yet to be aded
   span.innerText = time;
   expenseDetails.appendChild(span);
   categoryAmtDiv.appendChild(expenseDetails); // sub child 1 appended
@@ -540,38 +541,48 @@ disWrapper.addEventListener("change", (e) => {
     return;
   }
 
-  const exp = expenseArr.find(
-    (item) => item.id == e.target.selectedOptions[0].id,
-  );
-  const amt = disWrapper.querySelector(`#${exp.category}`);
-  const time = disWrapper.querySelector(`#${exp.category}-time`);
-  amt.innerText = `₹ ${exp.expense}`;
-  time.innerText = exp.time;
+  const option = e.target.selectedOptions[0];
+  const wrapper = e.target.closest(".exp-dis");
+  const amountEl = wrapper.querySelector("#amount-display");
+  const timeEl = wrapper.querySelector("#time-display");
+  let expense = null;
+  let time = null;
+
+  if (option.id === "Category-total") {
+    const categoryTotal = findTotal().find(
+      (item) => item.category === option.dataset.category,
+    );
+    expense = categoryTotal.totalExpense;
+    time = categoryTotal.lastModified;
+  } else {
+    const exp = expenseArr.find((item) => item.id === Number(option.id));
+    expense = exp.expense;
+    time = exp.time;
+  }
+
+  amountEl.innerText = `₹ ${expense}`;
+  timeEl.innerText = time;
 });
 
 //Event on category Card
 
-function attachEventonCatCard() {
-  disWrapper.addEventListener("click", (e) => {
-    const editBtn = e.target.closest("#editbtn");
-    const delBtn = e.target.closest("#deletebtn");
-    const viewAllBtn = e.target.closest("#viewbtn");
+disWrapper.addEventListener("click", (e) => {
+  const editBtn = e.target.closest("#editbtn");
+  const delBtn = e.target.closest("#deletebtn");
+  const viewAllBtn = e.target.closest("#viewbtn");
 
-    if (!editBtn && !delBtn && !viewAllBtn) {
-      return;
-    }
+  if (!editBtn && !delBtn && !viewAllBtn) {
+    return;
+  }
 
-    if (editBtn) {
-      editExp(editBtn);
-    } else if (delBtn) {
-      deleteExp(delBtn);
-    } else if (viewAllBtn) {
-      viewAllExp(viewAllBtn);
-    }
-  });
-}
-
-attachEventonCatCard();
+  if (editBtn) {
+    editExp(editBtn);
+  } else if (delBtn) {
+    deleteExp(delBtn);
+  } else if (viewAllBtn) {
+    viewAllExp(viewAllBtn);
+  }
+});
 
 // Function on view All button in category card
 
@@ -1023,13 +1034,20 @@ function deleteEdit(delBtn) {
 //Event on delete button in category expense card
 
 function deleteExp(delBtn) {
-  if (confirm("Are you sure you want to delete this entire expense")) {
-    let amount = delBtn.closest(".category-amount").querySelector(".exp");
-    let id = amount.getAttribute("id");
-    expenseArr = expenseArr.filter((item) => item.category !== id);
-
-    //Update amount displayed
-    setLocal("expense", expenseArr);
-    updateUI();
+  const wrapper = delBtn.closest(".exp-dis");
+  const list = wrapper.querySelector("#expenseSelect");
+  const value = list.selectedOptions[0];
+  console.log(value);
+  if (value.id === "Category-total") {
+    if (confirm("Are you sure you want to delete this entire expense")) {
+      let amount = delBtn.closest(".category-amount").querySelector(".exp");
+      let id = amount.getAttribute("id");
+      expenseArr = expenseArr.filter((item) => item.category !== id);
+    }
+  } else {
+    
   }
+  //Update amount displayed
+  setLocal("expense", expenseArr);
+  updateUI();
 }
