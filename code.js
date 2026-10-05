@@ -111,7 +111,7 @@ addButton.addEventListener("click", () => {
   const title = inpTitle.value.trim();
   const expense = Number(inpAmount.value);
   const category = inpCategory.value;
-  const time = new Date().toLocaleString();
+  const time = new Date();
   const comment = inpComment.value;
   const paymentType = inpPaymentType.value;
 
@@ -139,8 +139,9 @@ addButton.addEventListener("click", () => {
   updateUI();
   floatingBtn.classList.remove("hidden"); //floating button visible
   addSec.classList.add("hidden"); //add sec hide
-  inpAmount.value = ""; //amount feild set to empty
-  inpTitle.value = ""; //title feild set to empty
+  inpAmount.value = ""; //amount field set to empty
+  inpTitle.value = ""; //title field set to empty
+  comment.value = "";
 });
 
 //floating add button
@@ -155,11 +156,9 @@ floatingBtn.addEventListener("click", () => {
 //total expense display
 
 function totalExpdis() {
-  let exp = expenseArr.reduce(
-    (acc, current) => acc + Number(current.expense),
-    0,
+  let exp = Math.ceil(
+    expenseArr.reduce((acc, current) => acc + Number(current.expense), 0),
   );
-
   tAmount.innerText = `₹ ${exp}`;
 }
 totalExpdis();
@@ -299,10 +298,11 @@ function getFilteredArr(value) {
 }
 
 //Event for search
+
 const search = document.querySelector("#searchExp");
 let timerId;
 search.addEventListener("input", (e) => {
-  const value = e.target.value.toLowerCase();
+  const value = e.target.value.trim().toLowerCase();
   const datalist = document.querySelector("#search-options");
 
   clearTimeout(timerId);
@@ -324,6 +324,7 @@ search.addEventListener("input", (e) => {
       datalist.innerHTML = "";
       filteredArr.forEach((item) => createOption(item));
     } else {
+      datalist.innerHTML = "";
       return;
     }
   }, 300);
@@ -333,10 +334,10 @@ search.addEventListener("input", (e) => {
 
 const searchBtn = document.querySelector("#search-btn");
 searchBtn.addEventListener("click", (e) => {
-  const searchFeild = e.target
+  const searchField = e.target
     .closest(".search-div")
     .querySelector("#searchExp");
-  let filteredArr = getFilteredArr(searchFeild.value.toLowerCase());
+  let filteredArr = getFilteredArr(searchField.value.trim().toLowerCase());
   if (!filteredArr.length) {
     alert("No result found");
     return;
@@ -465,7 +466,7 @@ function createCategoryCard(category, amt, time) {
   const span = document.createElement("span");
   span.className = "d-t";
   span.id = "time-display"; //time is yet to be aded
-  span.innerText = time;
+  span.innerText = new Date(time).toLocaleString();
   expenseDetails.appendChild(span);
   categoryAmtDiv.appendChild(expenseDetails); // sub child 1 appended
 
@@ -528,7 +529,6 @@ function renderCatCard(sortedArr) {
       item.totalExpense,
       item.lastModified,
     );
-
     disWrapper.appendChild(card);
   });
 }
@@ -561,7 +561,7 @@ disWrapper.addEventListener("change", (e) => {
   }
 
   amountEl.innerText = `₹ ${expense}`;
-  timeEl.innerText = time;
+  timeEl.innerText = new Date(time).toLocaleString();
 });
 
 //Event on category Card
@@ -687,12 +687,12 @@ function createViewAllCard(filteredArr) {
 
     const titleTd = document.createElement("td");
     titleTd.innerText = item.title;
-    titleTd.dataset.feild = "title";
+    titleTd.dataset.field = "title";
     bodytr.appendChild(titleTd);
 
     const amountTd = document.createElement("td");
     amountTd.innerText = item.expense;
-    amountTd.dataset.feild = "amount";
+    amountTd.dataset.field = "amount";
     bodytr.appendChild(amountTd);
 
     const paidWithTd = document.createElement("td");
@@ -710,7 +710,7 @@ function createViewAllCard(filteredArr) {
     const actionTd = document.createElement("td");
     actionTd.className = "actioncell";
     const editBtn = document.createElement("button");
-    editBtn.classList = "viewall-action-btn";
+    editBtn.className = "viewall-action-btn";
     editBtn.id = "viewall-edit-btn";
     const editImg = document.createElement("img");
     editImg.src = "./assets/edit.png";
@@ -718,7 +718,7 @@ function createViewAllCard(filteredArr) {
     actionTd.appendChild(editBtn);
 
     const delBtn = document.createElement("button");
-    delBtn.classList = "viewall-action-btn";
+    delBtn.className = "viewall-action-btn";
     delBtn.id = "viewall-del-btn";
     const delImg = document.createElement("img");
     delImg.src = "./assets/delete.png";
@@ -811,16 +811,17 @@ function attachEventOnTable(table) {
 let editId = null;
 function editExpRow(editBtn) {
   const row = editBtn.closest("tr");
-  const amountCell = row.querySelector("[data-feild='amount']");
-  const titleCell = row.querySelector("[data-feild='title']");
+  const amountCell = row.querySelector("[data-field='amount']");
+  const titleCell = row.querySelector("[data-field='title']");
   const id = Number(row.dataset.id);
-  editId = id;
   let currentCard = editBtn.closest(".viewallWrapper");
   const card = createEditCard(
     titleCell.textContent,
     Number(amountCell.textContent),
   );
+
   if (card) {
+    editId = id;
     currentCard.after(card);
   }
 }
@@ -1015,6 +1016,7 @@ function cancelEdit(cancelBtn) {
   if (editWrapper) {
     editWrapper.remove();
   }
+  editId = null;
 }
 
 //function for delete button in Edit card
