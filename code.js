@@ -1036,16 +1036,23 @@ function deleteEdit(delBtn) {
 function deleteExp(delBtn) {
   const wrapper = delBtn.closest(".exp-dis");
   const list = wrapper.querySelector("#expenseSelect");
-  const value = list.selectedOptions[0];
-  console.log(value);
-  if (value.id === "Category-total") {
-    if (confirm("Are you sure you want to delete this entire expense")) {
-      let amount = delBtn.closest(".category-amount").querySelector(".exp");
-      let id = amount.getAttribute("id");
-      expenseArr = expenseArr.filter((item) => item.category !== id);
+  const selectedOption = list.selectedOptions[0];
+  if (selectedOption.id === "Category-total") {
+    if (confirm("Are you sure you want to delete this entire category")) {
+      expenseArr = expenseArr.filter(
+        (item) => item.category !== selectedOption.dataset.category,
+      );
+    } else {
+      return;
     }
   } else {
-    
+    if (confirm("Are you sure you want to delete this expense")) {
+      expenseArr = expenseArr.filter(
+        (item) => item.id !== Number(selectedOption.id),
+      );
+    } else {
+      return;
+    }
   }
   //Update amount displayed
   setLocal("expense", expenseArr);
