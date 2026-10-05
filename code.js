@@ -61,7 +61,7 @@ function updateUI() {
   totalEntries();
   monthTExp();
   renderCategories(categoryFilt, true);
-  renderCatCard();
+  sortBy();
   renderTotChart("bar"); //Total expense chart Updated
   renderCatChart("clothing"); //Category chart Updated
 }
@@ -293,6 +293,11 @@ function changedFilter() {
   });
 }
 
+//function for filtered Exp
+function getFilteredArr(value) {
+  return expenseArr.filter((item) => item.title.toLowerCase().includes(value));
+}
+
 //Event for search
 const search = document.querySelector("#searchExp");
 let timerId;
@@ -314,30 +319,34 @@ search.addEventListener("input", (e) => {
   }
 
   timerId = setTimeout(() => {
-    const filteredArr = expenseArr.filter((item) =>
-      item.title.toLowerCase().includes(value),
-    );
-    if (filteredArr[0]) {
+    const filteredArr = getFilteredArr(value);
+    if (filteredArr.length) {
       datalist.innerHTML = "";
       filteredArr.forEach((item) => createOption(item));
-      eventOnSearch(filteredArr);
+    } else {
+      return;
     }
   }, 300);
 });
 
 //Event on search button
 
-function eventOnSearch(filteredArr) {
-  console.log(filteredArr);
-  const searchBtn = document.querySelector("#search-btn");
-  searchBtn.addEventListener("click", (e) => {
-    const card = createViewAllCard(filteredArr);
-    const currentCard = e.target.closest(".transaction-controls");
-    if (card) {
-      currentCard.after(card);
-    }
-  });
-}
+const searchBtn = document.querySelector("#search-btn");
+searchBtn.addEventListener("click", (e) => {
+  const searchFeild = e.target
+    .closest(".search-div")
+    .querySelector("#searchExp");
+  let filteredArr = getFilteredArr(searchFeild.value.toLowerCase());
+  if (!filteredArr.length) {
+    alert("No result found");
+    return;
+  }
+  const card = createViewAllCard(filteredArr);
+  const currentCard = e.target.closest(".transaction-controls");
+  if (card) {
+    currentCard.after(card);
+  }
+});
 
 //functions for Sort by
 
@@ -461,7 +470,7 @@ function createCategoryCard(category, amt, time) {
 
   const edit = document.createElement("button"); //sub child 2 created
   edit.className = "editExp";
-  edit.id = edit;
+  edit.id = "editbtn";
   const img = document.createElement("img");
   img.src = "./assets/edit.png";
   edit.appendChild(img);
@@ -471,6 +480,7 @@ function createCategoryCard(category, amt, time) {
   deleteDiv.className = "delete";
   const deleteButton = document.createElement("button");
   deleteButton.className = "delete-btn";
+  deleteButton.id = "deletebtn";
   deleteButton.type = "button";
   const buttonImg = document.createElement("img");
   buttonImg.className = "delete-img";
@@ -487,12 +497,13 @@ function createCategoryCard(category, amt, time) {
 
 function renderOptCategory(appendto, category) {
   const count = expenseArr;
+
   //static option
   const option = document.createElement("option");
   option.innerText = "Category Expenses";
   option.className = category;
   option.dataset.category = category;
-  option.id = category;
+  option.id = "Category-total"; //used in edit button
   appendto.appendChild(option);
 
   //dynamic list option
@@ -538,21 +549,45 @@ disWrapper.addEventListener("change", (e) => {
   time.innerText = exp.time;
 });
 
-//Event on view All button in category card
+//Event on category Card
 
-disWrapper.addEventListener("click", (e) => {
-  const viewBtn = e.target.closest("#viewbtn");
+function attachEventonCatCard() {
+  disWrapper.addEventListener("click", (e) => {
+    const editBtn = e.target.closest("#editbtn");
+    const delBtn = e.target.closest("#deletebtn");
+    const viewAllBtn = e.target.closest("#viewbtn");
 
-  if (!viewBtn) {
-    return;
-  }
+    if (!editBtn && !delBtn && !viewAllBtn) {
+      return;
+    }
 
-  renderedViewAllCard(viewBtn);
-});
+    if (editBtn) {
+      editExp(editBtn);
+    } else if (delBtn) {
+      deleteExp(delBtn);
+    } else if (viewAllBtn) {
+      viewAllExp(viewAllBtn);
+    }
+  });
+}
+
+attachEventonCatCard();
+
+// Function on view All button in category card
+
+function viewAllExp(viewAllBtn) {
+  renderedViewAllCard(viewAllBtn);
+}
 
 //View-all card created
 
 function createViewAllCard(filteredArr) {
+  const isExisted = document.querySelector(".viewallWrapper");
+  if (isExisted) {
+    alert("One ViewAll card is already opened. Kindly close one");
+    return;
+  }
+
   const wrapperDiv = document.createElement("div"); //parent
   wrapperDiv.className = "viewallWrapper";
 
@@ -699,12 +734,6 @@ function renderedViewAllCard(btn) {
   const selected = list.selectedOptions[0];
   let filteredArr = [];
 
-  const isExisted = document.querySelector(".viewallWrapper");
-  if (isExisted) {
-    alert("One ViewAll card is already opened. Kindly close one");
-    return;
-  }
-
   btn.style.visibility = "hidden";
 
   if (selected.dataset.category) {
@@ -742,7 +771,6 @@ function attachEventOnViewAllCard(wrapper) {
       if (viewBtn) {
         viewBtn.style.visibility = "visible";
       }
-
       wrapper.remove();
     }
   });
@@ -798,24 +826,19 @@ function deleteExpRow(delBtn) {
   }
 }
 
-//event on edit button
+//Function for edit button in Category card
 
-disWrapper.addEventListener("click", (e) => {
-  const editbtn = e.target.closest(".editExp");
-  if (!editbtn) {
-    return;
-  }
-
+function editExp(editBtn) {
   const isExisted = document.querySelector(".edit-wrapper");
   if (isExisted) {
     alert("Kindly save existing edit");
     return;
   }
 
-  let currentCard = editbtn.closest(".exp-dis");
+  let currentCard = editBtn.closest(".exp-dis");
 
   const expItem = currentCard.querySelector(".list");
-  if (expItem.selectedOptions[0].id === "all-categories") {
+  if (expItem.selectedOptions[0].id === "Category-total") {
     alert("You can't update entire category. Kindly select an expense.");
     return;
   }
@@ -830,7 +853,7 @@ disWrapper.addEventListener("click", (e) => {
   if (card) {
     currentCard.after(card);
   }
-});
+}
 
 //Create edit card
 
@@ -882,7 +905,6 @@ function createEditCard(title, amount) {
   saveBtn.className = "saveedit-btn";
   saveBtn.type = "button";
   saveBtn.id = "save-btn";
-  attachSaveEvnt(saveBtn, editTitle, editAmt);
 
   const SaveImg = document.createElement("img");
   SaveImg.className = "edit-icons";
@@ -895,7 +917,6 @@ function createEditCard(title, amount) {
   cancelBtn.id = "cancelEdit";
   cancelBtn.className = "canceledit-btn";
   cancelBtn.type = "button";
-  attachCancelEvnt(editWrapper, cancelBtn);
 
   const cancelImg = document.createElement("img");
   cancelImg.className = "edit-icons";
@@ -917,38 +938,46 @@ function createEditCard(title, amount) {
   optionsDiv.appendChild(delBtn);
 
   editWrapper.appendChild(optionsDiv);
-
+  attactEvtOnEditCard(editWrapper);
   return editWrapper;
 }
 
-//Event on save button in Edit card
+//Event on Edit card
 
-function attachSaveEvnt(saveBtn, editTitle, editAmt) {
-  saveBtn.addEventListener("click", () => {
-    const latestTitle = editTitle.value;
-    const latestAmount = Number(editAmt.value);
-    saveEdit(latestTitle, latestAmount);
-  });
-}
+function attactEvtOnEditCard(editWrapper) {
+  editWrapper.addEventListener("click", (e) => {
+    const saveBtn = e.target.closest("#save-btn");
+    const delBtn = e.target.closest("#delEdit");
+    const cancleBtn = e.target.closest("#cancelEdit");
 
-//Event on cancel button in Edit card
-
-function attachCancelEvnt(editWrapper, cancelBtn) {
-  cancelBtn.addEventListener("click", () => {
-    if (editWrapper) {
-      editWrapper.remove();
+    if (saveBtn) {
+      saveEdit(saveBtn);
+    } else if (cancleBtn) {
+      cancelEdit(cancleBtn);
+    } else if (delBtn) {
+      deleteEdit(delBtn);
     }
   });
 }
 
 //function on save button in Edit card
 
-function saveEdit(title, amount) {
+function saveEdit(saveBtn) {
+  const editTitleInp = saveBtn
+    .closest(".edit-wrapper")
+    .querySelector("#edit-title");
+  const editAmtInp = saveBtn
+    .closest(".edit-wrapper")
+    .querySelector("#edit-amount");
+  const title = editTitleInp.value;
+  const amount = Number(editAmtInp.value);
+
   if (editId === null) {
     return;
   }
 
   if (title.trim() === "" || !Number.isFinite(amount) || amount <= 0) {
+    console.log("this is also runningt");
     return;
   }
 
@@ -968,18 +997,34 @@ function saveEdit(title, amount) {
   }
 }
 
+//function on cancel button in Edit card
+
+function cancelEdit(cancelBtn) {
+  const editWrapper = cancelBtn.closest(".edit-wrapper");
+  if (editWrapper) {
+    editWrapper.remove();
+  }
+}
+
+//function for delete button in Edit card
+
+function deleteEdit(delBtn) {
+  const confirmation = confirm("Do you want to delete this expense");
+
+  if (confirmation) {
+    expenseArr = expenseArr.filter((element) => element.id !== editId);
+
+    setLocal("expense", expenseArr);
+    editId = null;
+    updateUI();
+  }
+}
+
 //Event on delete button in category expense card
 
-disWrapper.addEventListener("click", (e) => {
-  //click validation
-
-  const btn = e.target.closest(".delete-btn");
-  if (!btn) {
-    return;
-  }
-
+function deleteExp(delBtn) {
   if (confirm("Are you sure you want to delete this entire expense")) {
-    let amount = e.target.closest(".category-amount").querySelector(".exp");
+    let amount = delBtn.closest(".category-amount").querySelector(".exp");
     let id = amount.getAttribute("id");
     expenseArr = expenseArr.filter((item) => item.category !== id);
 
@@ -987,4 +1032,4 @@ disWrapper.addEventListener("click", (e) => {
     setLocal("expense", expenseArr);
     updateUI();
   }
-});
+}
