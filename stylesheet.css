@@ -96,7 +96,6 @@ body {
 .date-time {
   display: flex;
   flex-wrap: wrap;
-  margin-right: 20rem;
 }
 
 .profile-sec {
@@ -861,5 +860,42 @@ canvas {
   .fil-category {
     width: 100%;
     max-width: none;
+  }
+}
+
+@media (max-width: 391px) {
+  .header-wrapper {
+    padding: 0.5rem;
+  }
+
+  .wallet-incon {
+    width: 2.5rem;
+  }
+
+  .head-sec h1 {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  .date-time {
+    font-size: 1rem;
+  }
+
+  .profile-sec {
+    gap: 1rem;
+  }
+
+  .dark,
+  .profile {
+    height: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .chartwrapper {
+    flex-direction: column;
+  }
+
+  #total-canvas {
+    width: auto;
   }
 }
