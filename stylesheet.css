@@ -467,7 +467,6 @@ canvas {
 }
 
 .category {
-  width: 25rem;
   font-size: 2rem;
   user-select: none;
   display: flex;
@@ -500,6 +499,7 @@ canvas {
 
 .view-btn {
   cursor: pointer;
+  width: 4rem;
   border: none;
   background-color: transparent;
   transition: ease-in-out 100ms;
@@ -507,7 +507,7 @@ canvas {
 }
 
 .view-btn img {
-  width: 4rem;
+  width: 100%;
 }
 
 .viewallWrapper {
@@ -579,10 +579,11 @@ canvas {
   outline: none;
   border: none;
   cursor: pointer;
+  width: 3.5rem;
 }
 
 .viewall-btn img {
-  width: 3.5rem;
+  width: 100%;
 }
 
 /* To be removed after table testing */
@@ -622,14 +623,15 @@ canvas {
   background-color: transparent;
   border: none;
   cursor: pointer;
+  width: 4.5rem;
 }
 
 .editExp img {
-  width: 4.5rem;
+  width: 100%;
 }
 
 .delete-img {
-  width: 4.5rem;
+  width: 100%;
 }
 
 .delete-btn {
@@ -897,5 +899,85 @@ canvas {
 
   #total-canvas {
     width: auto;
+  }
+
+  .transaction-controls {
+    padding: 2rem 4rem;
+    gap: 2rem;
+    flex-direction: column;
+    height: auto;
+  }
+
+  .fil-category,
+  .search {
+    height: 3rem;
+    width: 15rem;
+    padding: 0 2rem;
+    margin-left: 2rem;
+  }
+
+  .search {
+    width: 15rem;
+  }
+
+  .searchbtn {
+    height: 3rem;
+  }
+
+  .searchbtn img {
+    height: 3rem;
+  }
+
+  .exp-dis {
+    height: 4rem;
+    padding: 0 1rem;
+  }
+
+  .category {
+    font-size: 1rem;
+    gap: 0.5rem;
+  }
+
+  .category-icon {
+    height: 2rem;
+  }
+
+  .listdiv {
+    gap: 1rem;
+  }
+
+  .list {
+    height: 2rem;
+    width: 14rem;
+    padding: 0 2rem;
+    font-size: 1rem;
+  }
+
+  .view-btn {
+    height: 1rem;
+    background-color: red;
+  }
+
+  .category-amount {
+    height: 5rem;
+    width: 10rem;
+    gap: 1rem;
+  }
+
+  .exp-dt {
+    width: 5rem;
+  }
+
+  .exp {
+    font-size: 1.5rem;
+  }
+
+  .d-t {
+    font-size: 1rem;
+  }
+
+  .delete-btn {
+    height: 1.5rem;
+    width: 1.5rem;
   }
 }
