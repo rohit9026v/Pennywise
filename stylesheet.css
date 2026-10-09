@@ -843,10 +843,6 @@ canvas {
     gap: 1rem;
   }
 
-  .dis-expense {
-    width: 100%;
-  }
-
   .user-inputs {
     flex-direction: column;
     gap: 1rem;
@@ -862,6 +858,65 @@ canvas {
   .fil-category {
     width: 100%;
     max-width: none;
+  }
+
+  .exp-dis {
+    padding: 0 2rem;
+  }
+
+  .category {
+    font-size: 1.5rem;
+    gap: 1rem;
+  }
+
+  .category-icon {
+    height: 3.5rem;
+  }
+
+  .listdiv {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .list {
+    height: 4rem;
+    width: 25rem;
+    padding: 0 2rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+  }
+
+  .view-btn {
+    width: 3.5rem;
+  }
+
+  .category-amount {
+    background-color: red;
+  }
+
+  .exp {
+    font-size: 2rem;
+  }
+
+  .d-t {
+    font-size: 1.4rem;
+  }
+
+  .editExp {
+    width: 3.5rem;
+  }
+
+  .delete-btn {
+    width: 3.5rem;
+  }
+
+  .flt-btn {
+    width: 5rem;
+    height: 5rem;
+    right: 4rem;
+    bottom: 8rem;
+    font-size: 5rem;
   }
 }
 
@@ -955,7 +1010,6 @@ canvas {
 
   .view-btn {
     height: 1rem;
-    background-color: red;
   }
 
   .category-amount {
