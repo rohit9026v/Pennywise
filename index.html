@@ -119,7 +119,6 @@
                 <option value="misc-expense">Misc. Expense</option>
               </select>
 
-              <label for="inp-comment"></label>
               <input
                 type="text"
                 name="comment"
@@ -194,7 +193,7 @@
         </section>
 
         <section class="transaction-controls">
-          <div>
+          <div class="search-div">
             <label for="fil-category" class="fil">Filter by category:</label>
             <select name="fil-category" id="fil-category" class="fil-category">
               <!-- dynamic option rendered in js -->
@@ -203,21 +202,23 @@
 
           <div class="search-div">
             <label for="searchExp" class="fil">Search:</label>
-            <input
-              type="search"
-              name="Search"
-              id="searchExp"
-              class="search"
-              list="search-options"
-              placeholder="Search expense..."
-            />
-            <datalist id="search-options"></datalist>
-            <button type="button" id="search-btn" class="searchbtn">
-              <img src="./assets/search.gif" alt="" />
-            </button>
+            <div class="searchInp">
+              <input
+                type="search"
+                name="Search"
+                id="searchExp"
+                class="search"
+                list="search-options"
+                placeholder="Search expense..."
+              />
+              <datalist id="search-options"></datalist>
+              <button type="button" id="search-btn" class="searchbtn">
+                <img src="./assets/search.gif" alt="" />
+              </button>
+            </div>
           </div>
 
-          <div>
+          <div class="search-div">
             <label for="sort-by" class="fil">Sort by:</label>
             <select name="sort-by" id="sort-by" class="fil-category">
               <option value="default">Default</option>
