@@ -859,14 +859,16 @@ canvas {
     width: 3rem;
   }
 
+  .tools {
+    padding: 1rem 1.5rem;
+  }
+
   h2 {
     font-size: 1.6rem;
   }
 
   .file {
     gap: 1.5rem;
-    padding: 0;
-    margin: 0;
   }
 
   .exportBtn img {
@@ -1021,19 +1023,20 @@ canvas {
     width: 2.5rem;
   }
 
+  .tools {
+    padding: 1rem 1rem;
+  }
+
   h2 {
     font-size: 1.2rem;
   }
 
-  
   .file {
     gap: 1rem;
-    padding: 0;
-    margin: 0;
   }
 
   .exportBtn img {
-    width: 2rem;
+    width: 2.5rem;
   }
 
   .uploadwrapper {
@@ -1041,7 +1044,7 @@ canvas {
   }
 
   .uploadimg {
-    width: 1.4rem;
+    width: 1.8rem;
   }
 
   .add-expense {
@@ -1066,7 +1069,7 @@ canvas {
   }
 
   .dis-expense {
-    font-size: 1rem;
+    font-size: 1.3rem;
   }
 
   .chartwrapper {
