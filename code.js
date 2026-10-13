@@ -891,28 +891,29 @@ function createEditCard(title, amount) {
 
   const editTitleDiv = document.createElement("div"); //sub child 1
   editTitleDiv.className = "edit-title-group";
-  const spanT = document.createElement("span");
-  spanT.className = "edit-label";
-  spanT.innerText = "Edit Title:";
+  const pTitle = document.createElement("p");
+  pTitle.className = "edit-label";
+  pTitle.innerText = "Edit Title:";
   const editTitle = document.createElement("input");
   editTitle.className = "edit-inp";
   editTitle.id = "edit-title";
   editTitle.type = "text";
   editTitle.value = title;
-  editTitleDiv.appendChild(spanT);
+  editTitleDiv.appendChild(pTitle);
   editTitleDiv.appendChild(editTitle);
   editdiv.appendChild(editTitleDiv);
 
   const editAmtDiv = document.createElement("div"); //sub child 2
   editAmtDiv.className = "edit-amount-group";
-  const spanA = document.createElement("span");
-  spanA.innerText = "Edit Amount:";
+  const pAmt = document.createElement("p");
+  pTitle.className = "edit-label";
+  pAmt.innerText = "Edit Amount:";
   const editAmt = document.createElement("input");
   editAmt.className = "edit-inp";
   editAmt.id = "edit-amount";
   editAmt.type = "number";
   editAmt.value = amount;
-  editAmtDiv.appendChild(spanA);
+  editAmtDiv.appendChild(pAmt);
   editAmtDiv.appendChild(editAmt);
   editdiv.appendChild(editAmtDiv);
 

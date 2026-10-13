@@ -689,32 +689,42 @@ canvas {
 
 .edit-wrapper {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  height: 8rem;
+  justify-content: space-evenly;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background-color: var(--primary-color);
-  padding: 0 6rem;
+  padding: 0.5rem 2rem;
   font-size: 1.8rem;
   color: var(--text-color);
 }
 
 .edit-amt-name {
   display: flex;
-  gap: 10rem;
+  gap: 5rem;
+}
+
+.edit-title-group,
+.edit-amount-group {
+  display: flex;
+  gap: 2rem;
 }
 
 .edit-inp {
-  width: 30rem;
-  height: 4rem;
+  max-width: 30rem;
+  width: 100%;
   border: 0.5px solid var(--border-color);
   border-radius: 8px;
-  margin-left: 2rem;
   color: var(--input-color);
   background-color: var(--input-bg-color);
-  padding: 0 2rem;
+  padding: 0.5rem 2rem;
   caret-color: var(--caret-color);
+}
+
+.edit-options {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
 }
 
 .saveedit-btn,
@@ -726,14 +736,9 @@ canvas {
   transition: 100ms ease-in-out;
 }
 
-.edit-options {
-  display: flex;
-  align-items: center;
-  gap: 3rem;
-}
-
 .edit-icons {
-  width: 4.5rem;
+  max-width: 4rem;
+  width: 100%;
 }
 
 .footerwrapper {
@@ -1030,6 +1035,29 @@ canvas {
     width: 3.5rem;
   }
 
+  .edit-wrapper {
+    padding: 0.5rem 1.5rem;
+    font-size: 1.4rem;
+    gap: 0.5rem;
+  }
+
+  .edit-amt-name {
+    gap: 1.5rem;
+  }
+
+  .edit-title-group,
+  .edit-amount-group {
+    gap: 0.5rem;
+  }
+
+  .edit-inp {
+    padding: 0 1rem;
+  }
+
+  .edit-options {
+    gap: 1rem;
+  }
+
   .delete-btn {
     width: 3.5rem;
   }
@@ -1122,7 +1150,7 @@ canvas {
   }
 
   .exportBtn {
-    width: 3rem;
+    width: 2.7rem;
   }
 
   .uploadwrapper {
@@ -1253,6 +1281,34 @@ canvas {
   .editExp {
     width: 2.5rem;
   }
+
+  .edit-wrapper {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    gap: 0.5rem;
+    flex-direction: column;
+  }
+
+  .edit-amt-name {
+    gap: 1rem;
+  }
+
+  .edit-title-group,
+  .edit-amount-group {
+    gap: 0.5rem;
+  }
+
+  .edit-inp {
+    padding: 0 1rem;
+  }
+
+  .edit-options {
+    gap: 1rem;
+  }
+
+  .edit-icons {
+  width: 2.5rem;
+}
 
   .delete-btn {
     width: 2.5rem;
