@@ -49,7 +49,7 @@ html {
   --bg-color: #0b0d16;
   --card-color: #151824;
   --text-color: #e8eaf2;
-  --input-color: #white;
+  --input-color: white;
   --input-bg-color: #202437;
   --border-color: #34394d;
   --button-color: #6366f1;
@@ -73,7 +73,7 @@ body {
   background-color: var(--card-color);
   border-radius: 8px;
   margin: 2rem 2vw;
-  padding: 0 2rem;
+  padding: 0.5rem 2rem;
   color: var(--text-color);
 }
 
@@ -541,6 +541,18 @@ canvas {
   font-size: 2.5rem;
 }
 
+.viewall-btn {
+  background-color: transparent;
+  outline: none;
+  border: none;
+  cursor: pointer;
+  max-width: 3.5rem;
+}
+
+.viewall-btn img {
+  width: 100%;
+}
+
 .viewall-toolDiv {
   display: flex;
   gap: 2rem;
@@ -553,15 +565,23 @@ canvas {
   border: none;
   background-color: transparent;
   cursor: pointer;
+  max-width: 4.5rem;
 }
 
 .viewall-action-btn img {
-  width: 4.5rem;
+  width: 100%;
 }
 
-.viewallWrapper table {
+.tableWrapper {
+  overflow-x: auto;
+  width: 100%;
+  min-width: 0;
+}
+
+.tableWrapper table {
   width: 100%;
   border-collapse: separate;
+  min-width: 60%;
 }
 
 .viewallWrapper td {
@@ -584,20 +604,7 @@ canvas {
   justify-content: space-evenly;
 }
 
-.viewall-btn {
-  background-color: transparent;
-  outline: none;
-  border: none;
-  cursor: pointer;
-  width: 3.5rem;
-}
-
-.viewall-btn img {
-  width: 100%;
-}
-
-/* To be removed after table testing */
-.allWrapper table,
+.tableWrapper,
 .viewallWrapper th,
 .viewallWrapper td {
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -750,7 +757,7 @@ canvas {
   gap: 1rem;
 }
 
-.footer-logo img{
+.footer-logo img {
   max-width: 3.5rem;
   width: 100%;
 }
@@ -852,8 +859,8 @@ canvas {
 }
 
 @media (max-width: 768px) {
-  .header-wrapper {
-    padding: 1rem;
+  .wallet-incon {
+    width: 3rem;
   }
 
   .head-sec h1 {
@@ -868,6 +875,12 @@ canvas {
     gap: 1.5rem;
   }
 
+  .dark,
+  .profile {
+    max-width: 3rem;
+    max-height: 3rem;
+  }
+
   .tools {
     padding: 1rem 1.5rem;
   }
@@ -880,6 +893,9 @@ canvas {
     gap: 1.5rem;
   }
 
+  .exportBtn {
+    width: 3rem;
+  }
 
   .uploadwrapper {
     font-size: 1.3rem;
@@ -985,7 +1001,9 @@ canvas {
     width: 3rem;
   }
 
-
+  .head-div h2 {
+    font-size: 2rem;
+  }
 
   .category-amount {
     text-align: center;
@@ -1024,47 +1042,45 @@ canvas {
     flex-wrap: wrap;
     row-gap: 1.5rem;
   }
-}
+  .footerwrapper {
+    margin: 2rem 1vw 1rem 1vw;
+    padding: 2rem 2rem 0 2rem;
+  }
 
-.footerwrapper {
-  margin: 2rem 1vw 1rem 1vw;
-  padding: 2rem 2rem 0 2rem;
-}
+  .footer-social h2 {
+    font-size: 2rem;
+  }
 
+  .footer-taglines h3 {
+    font-size: 1.4rem;
+  }
 
-.footer-social h2 {
-  font-size: 2rem;
-}
+  .footer-taglines p {
+    font-size: 1.2rem;
+  }
 
-.footer-taglines h3 {
-  font-size: 1.4rem;
-}
+  .footer-btn {
+    width: 3rem;
+    height: 3rem;
+  }
 
-.footer-taglines p {
-  font-size: 1.2rem;
-}
+  .footer-rights {
+    font-size: 1.2rem;
+  }
 
-.footer-btn {
-  width: 3rem;
-  height: 3rem;
-}
+  .footer {
+    font-size: 1.6rem;
+    gap: 1rem;
+  }
 
-.footer-rights {
-  font-size: 1.2rem;
-}
-
-.footer {
-  font-size: 1.6rem;
-  gap: 1rem;
-}
-
-.ft-img {
-  height: 2.4rem;
+  .ft-img {
+    height: 2.4rem;
+  }
 }
 
 @media (max-width: 391px) {
-  .header-wrapper {
-    padding: 0.5rem;
+  .wallet-incon {
+    width: 2.5rem;
   }
 
   .head-sec h1 {
@@ -1079,6 +1095,12 @@ canvas {
     gap: 1rem;
   }
 
+  .dark,
+  .profile {
+    max-width: 2.5rem;
+    max-height: 2.5rem;
+  }
+
   .tools {
     padding: 1rem 1rem;
   }
@@ -1091,6 +1113,9 @@ canvas {
     gap: 1rem;
   }
 
+  .exportBtn {
+    width: 3rem;
+  }
 
   .uploadwrapper {
     font-size: 1.1rem;
@@ -1197,7 +1222,9 @@ canvas {
     width: 2rem;
   }
 
-  
+  .head-div h2 {
+    font-size: 1.5rem;
+  }
 
   .category-amount {
     gap: 0.4rem;
@@ -1231,22 +1258,18 @@ canvas {
     font-size: 4rem;
   }
 
- 
-
   .footerwrapper {
     margin: 2rem 1vw 1rem 1vw;
     padding: 2rem 1rem 0 1rem;
   }
 
   .footer-logo {
-  gap: 0.6rem;
-}
-
-   .footer-social {
-    flex-wrap: wrap;
+    gap: 0.6rem;
   }
 
-  
+  .footer-social {
+    flex-wrap: wrap;
+  }
 
   .footer-social h2 {
     font-size: 1.5rem;

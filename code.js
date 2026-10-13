@@ -640,6 +640,8 @@ function createViewAllCard(filteredArr) {
 
   //table
 
+  const tableWrapper = document.createElement("div");
+  tableWrapper.className = "tableWrapper";
   const table = document.createElement("table");
 
   //table head
@@ -734,9 +736,11 @@ function createViewAllCard(filteredArr) {
     bodytr.dataset.id = item.id;
     tbody.appendChild(bodytr);
   });
+  
   table.appendChild(tbody);
+  tableWrapper.appendChild(table);
   attachEventOnTable(table);
-  wrapperDiv.appendChild(table);
+  wrapperDiv.appendChild(tableWrapper);
   attachEventOnViewAllCard(wrapperDiv);
   return wrapperDiv;
 }
