@@ -470,13 +470,16 @@ function createCategoryCard(category, amt, time) {
   expenseDetails.appendChild(span);
   categoryAmtDiv.appendChild(expenseDetails); // sub child 1 appended
 
+  const editDelDiv = document.createElement("div");
+  editDelDiv.className = "editDelDiv";
+
   const edit = document.createElement("button"); //sub child 2 created
   edit.className = "editExp";
   edit.id = "editbtn";
   const img = document.createElement("img");
   img.src = "./assets/edit.png";
   edit.appendChild(img);
-  categoryAmtDiv.appendChild(edit); //sub child 2 appended
+  editDelDiv.appendChild(edit); //sub child 2 appended
 
   const deleteDiv = document.createElement("div"); //sub child 3 created
   deleteDiv.className = "delete";
@@ -489,7 +492,8 @@ function createCategoryCard(category, amt, time) {
   buttonImg.src = "./assets/delete.png";
   deleteButton.appendChild(buttonImg);
   deleteDiv.appendChild(deleteButton);
-  categoryAmtDiv.appendChild(deleteDiv); //sub-child 3 appended
+  editDelDiv.appendChild(deleteDiv);
+  categoryAmtDiv.appendChild(editDelDiv); //sub-child 3 appended
   wrapperDiv.appendChild(categoryAmtDiv); // child 2 appended
 
   return wrapperDiv;
