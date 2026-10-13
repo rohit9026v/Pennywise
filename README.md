@@ -1,6 +1,6 @@
 # 💰 Pennywise
 
-A modern Expense Tracker web application built using **HTML, CSS, and JavaScript**. It helps users manage daily expenses, visualize spending with charts, and securely store data using the browser's Local Storage.
+A modern Expense Tracker web application built using **HTML, CSS, JavaScript, and chart.js**. It helps users manage daily expenses, visualize spending with charts, and securely store data using the browser's Local Storage.
 
 ---
 
@@ -16,7 +16,7 @@ A modern Expense Tracker web application built using **HTML, CSS, and JavaScript
 - 🗑️ Delete expenses
 - 📂 Expense categorization
 - 💰 Track total expenses
-- 📊 Interactive Pie Chart & Bar Chart
+- 📊 Interactive dynamic Charts
 - 💾 Local Storage support
 - 📅 Real-time Date & Time
 - 📱 Responsive design
@@ -44,6 +44,7 @@ Expense-Tracker/
 ├── style.css
 ├── script.js
 ├── assets/
+|-- chart.js
 └── README.md
 ```
 
@@ -70,7 +71,6 @@ During this project I practiced:
 - 🔐 User Authentication
 - 👤 User Profiles
 - 📅 Monthly & Yearly Reports
-- 🔍 Search & Filter Expenses
 - 📈 Budget Planning
 
 ---
