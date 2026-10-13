@@ -581,20 +581,20 @@ canvas {
 .tableWrapper table {
   width: 100%;
   border-collapse: separate;
-  min-width: 60%;
+  min-width: 0%;
 }
 
-.viewallWrapper td {
+.tableWrapper td {
   padding: 1.2rem 1.6rem;
 }
 
-.viewallWrapper th {
+.tableWrapper th {
   font-size: 2rem;
   text-align: center;
   padding: 1rem 2rem;
 }
 
-.viewallWrapper tbody td {
+.tableWrapper tbody td {
   font-size: 1.5rem;
 }
 
@@ -701,7 +701,8 @@ canvas {
 
 .edit-amt-name {
   display: flex;
-  gap: 5rem;
+  justify-content: space-evenly;
+  flex: 1;
 }
 
 .edit-title-group,
@@ -748,7 +749,7 @@ canvas {
   color: var(--text-color);
   border-top: 2px solid var(--border-color);
   margin: 2rem 1vw 1rem 1vw;
-  padding: 2rem 4rem 0 4rem;
+  padding: 2rem 2rem 0 2rem;
 }
 
 .footer-social {
@@ -1019,6 +1020,16 @@ canvas {
     max-width: 2.5rem;
   }
 
+  .viewallWrapper th {
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
+  .tableWrapper tbody td {
+    font-size: 1.5rem;
+    padding: 1rem 1.5rem;
+  }
+
   .viewall-action-btn {
     width: 3.7rem;
   }
@@ -1279,7 +1290,17 @@ canvas {
   }
 
   .viewall-btn {
-    max-width: 2.5rem;
+    width: 2.5rem;
+  }
+
+  .viewallWrapper th {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+  }
+
+  .tableWrapper tbody td {
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
   }
 
   .viewall-action-btn {
