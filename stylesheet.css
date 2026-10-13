@@ -859,6 +859,10 @@ canvas {
 }
 
 @media (max-width: 768px) {
+  .header-wrapper {
+    padding: 0.5rem 1rem;
+  }
+
   .wallet-incon {
     width: 3rem;
   }
@@ -1079,6 +1083,10 @@ canvas {
 }
 
 @media (max-width: 391px) {
+  .header-wrapper {
+    padding: 0.5rem 1rem;
+  }
+
   .wallet-incon {
     width: 2.5rem;
   }
