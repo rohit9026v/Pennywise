@@ -1248,7 +1248,7 @@ canvas {
 
   .exp-dis {
     height: auto;
-    padding: 1rem;
+    padding: 0.5rem;
   }
 
   .category {
@@ -1376,7 +1376,7 @@ canvas {
 
   .footer {
     font-size: 1.2rem;
-    gap: 1rem;
+    gap: 0.5rem;
   }
 
   .ft-img {
