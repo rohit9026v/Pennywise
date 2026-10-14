@@ -61,8 +61,8 @@ function updateUI() {
   totalExpdis();
   totalEntries();
   monthTExp();
-  renderCategories(categoryFilt, true);
-  sortBy();
+  // renderCategories(categoryFilt, true);
+  // sortBy();
   renderTotChart("bar"); //Total expense chart Updated
   renderCatChart("clothing"); //Category chart Updated
 }
@@ -172,6 +172,7 @@ function updateCatCard(Exp) {
   list.appendChild(option);
   list.selectedIndex = 0;
   list.dispatchEvent(new Event("change", { bubbles: true }));
+  updateUI();
 }
 
 //functioon to add category card in DOM
@@ -186,6 +187,7 @@ function addCatCard(Exp) {
   option.value = Exp.category;
   categoryFilt.appendChild(option);
   categoryChart.appendChild(option.cloneNode(true));
+  updateUI();
 }
 
 //floating add button
@@ -1040,7 +1042,6 @@ function saveEdit(saveBtn) {
   }
 
   if (title.trim() === "" || !Number.isFinite(amount) || amount <= 0) {
-    console.log("this is also runningt");
     return;
   }
 
@@ -1056,6 +1057,8 @@ function saveEdit(saveBtn) {
 
     setLocal("expense", expenseArr);
     editId = null;
+    list.selectedIndex = 0;
+    list.dispatchEvent(new Event("change", { bubbles: true }));
     updateUI();
   }
 }
@@ -1070,7 +1073,7 @@ function cancelEdit(cancelBtn) {
   editId = null;
 }
 
-//function for delete button in Edit card
+//function for delete button in Edit card  to be removed
 
 function deleteEdit(delBtn) {
   const confirmation = confirm("Do you want to delete this expense");
@@ -1095,8 +1098,6 @@ function deleteExp(delBtn) {
   } else {
     delSingleExp(list, selectedOption);
   }
-
-  // updateUI();
 }
 
 function delCategory(selectedOption, wrapper) {
@@ -1118,6 +1119,7 @@ function delCategory(selectedOption, wrapper) {
       catChartOpt.remove();
     }
     setLocal("expense", expenseArr);
+    updateUI();
   } else {
     return;
   }
@@ -1132,6 +1134,7 @@ function delSingleExp(list, selectedOption) {
     list.selectedIndex = 0;
     list.dispatchEvent(new Event("change", { bubbles: true }));
     setLocal("expense", expenseArr);
+    updateUI();
   } else {
     return;
   }
