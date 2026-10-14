@@ -11,6 +11,7 @@ const categoryFilt = document.querySelector("#fil-category");
 const disWrapper = document.querySelector(".dis-wrapper");
 const inpPaymentType = document.querySelector("#inp-type");
 const inpComment = document.querySelector("#inp-comment");
+const categoryChart = document.querySelector("#category-select");
 
 //date and time Updation
 
@@ -101,8 +102,6 @@ printBtn.addEventListener("click", () => {
   window.print();
 });
 
-//function on upload input
-
 //function on add button
 
 const addSec = document.querySelector("#add-sec");
@@ -125,7 +124,7 @@ addButton.addEventListener("click", () => {
     return;
   }
 
-  expenseArr.push({
+  const newExp = {
     id: Date.now(),
     category,
     title,
@@ -133,16 +132,50 @@ addButton.addEventListener("click", () => {
     paymentType,
     time,
     comment,
-  });
+  };
+
+  expenseArr.push(newExp);
 
   setLocal("expense", expenseArr);
-  updateUI();
   floatingBtn.classList.remove("hidden"); //floating button visible
   addSec.classList.add("hidden"); //add sec hide
   inpAmount.value = ""; //amount field set to empty
   inpTitle.value = ""; //title field set to empty
-  comment.value = "";
+  // comment.value = ""; bug still present
+  upsertCatCard(newExp);
+  // updateUI();
 });
+
+//function for upsert Category card
+
+function upsertCatCard(newExp) {
+  const category = newExp.category;
+  const isExisted = disWrapper.querySelector(`.${category}`);
+  if (isExisted) {
+    updateCatCard(newExp);
+    return;
+  } else {
+    addCatCard(newExp);
+  }
+}
+
+// function to update category card in DOM
+
+function updateCatCard(Exp) {}
+
+//functioon to add category card in DOM
+
+function addCatCard(Exp) {
+  const card = createCategoryCard(Exp.category, Exp.expense, Exp.time);
+  disWrapper.appendChild(card);
+
+  const option = document.createElement("option");
+  option.innerText = Exp.category.toUpperCase();
+  option.className = Exp.category;
+  option.value = Exp.category;
+  categoryFilt.appendChild(option);
+  categoryChart.appendChild(option.cloneNode(true));
+}
 
 //floating add button
 
@@ -215,7 +248,6 @@ renderTotChart("bar");
 
 //dynamic category charts options
 
-const categoryChart = document.querySelector("#category-select");
 renderCategories(categoryChart);
 
 //dynamic category chart functinn
@@ -252,7 +284,6 @@ function renderCategories(appendTo, includeAll = false) {
 
     item.innerText = categories[i].toUpperCase();
     item.value = categories[i];
-
     appendTo.appendChild(item);
   }
 }
@@ -1049,25 +1080,45 @@ function deleteExp(delBtn) {
   const list = wrapper.querySelector("#expenseSelect");
   const selectedOption = list.selectedOptions[0];
   if (selectedOption.id === "Category-total") {
-    if (confirm("Are you sure you want to delete this entire category")) {
-      expenseArr = expenseArr.filter(
-        (item) => item.category !== selectedOption.dataset.category,
-      );
-      wrapper.remove();
-    } else {
-      return;
-    }
+    delCategory(selectedOption, wrapper);
   } else {
-    if (confirm("Are you sure you want to delete this expense")) {
-      expenseArr = expenseArr.filter(
-        (item) => item.id !== Number(selectedOption.id),
-      );
-    } else {
-      return;
-    }
+    delSingleExp(selectedOption);
   }
 
-  //Update amount displayed
-  setLocal("expense", expenseArr);
   // updateUI();
+}
+
+function delCategory(selectedOption, wrapper) {
+  if (confirm("Are you sure you want to delete this entire category")) {
+    expenseArr = expenseArr.filter(
+      (item) => item.category !== selectedOption.dataset.category,
+    );
+
+    wrapper.remove();
+    const category = selectedOption.dataset.category;
+    const catFiloption = categoryFilt.querySelector(
+      `option[value="${category}"]`,
+    );
+    const catChartOpt = categoryChart.querySelector(
+      `option[value="${category}"]`,
+    );
+    if (catFiloption || catChartOpt) {
+      catFiloption.remove();
+      catChartOpt.remove();
+    }
+    setLocal("expense", expenseArr);
+  } else {
+    return;
+  }
+}
+
+function delSingleExp(selectedOption) {
+  if (confirm("Are you sure you want to delete this expense")) {
+    expenseArr = expenseArr.filter(
+      (item) => item.id !== Number(selectedOption.id),
+    );
+  } else {
+    return;
+  }
+  setLocal("expense", expenseArr);
 }
