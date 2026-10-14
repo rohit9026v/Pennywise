@@ -161,7 +161,18 @@ function upsertCatCard(newExp) {
 
 // function to update category card in DOM
 
-function updateCatCard(Exp) {}
+function updateCatCard(Exp) {
+  const category = Exp.category;
+  const card = disWrapper.querySelector(`.${category}`);
+  const list = card.querySelector("#expenseSelect");
+
+  const option = document.createElement("option");
+  option.innerText = Exp.title;
+  option.id = Exp.id;
+  list.appendChild(option);
+  list.selectedIndex = 0;
+  list.dispatchEvent(new Event("change", { bubbles: true }));
+}
 
 //functioon to add category card in DOM
 
