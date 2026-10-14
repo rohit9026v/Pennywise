@@ -736,7 +736,7 @@ function createViewAllCard(filteredArr) {
     bodytr.dataset.id = item.id;
     tbody.appendChild(bodytr);
   });
-  
+
   table.appendChild(tbody);
   tableWrapper.appendChild(table);
   attachEventOnTable(table);
@@ -1053,6 +1053,7 @@ function deleteExp(delBtn) {
       expenseArr = expenseArr.filter(
         (item) => item.category !== selectedOption.dataset.category,
       );
+      wrapper.remove();
     } else {
       return;
     }
@@ -1065,7 +1066,8 @@ function deleteExp(delBtn) {
       return;
     }
   }
+
   //Update amount displayed
   setLocal("expense", expenseArr);
-  updateUI();
+  // updateUI();
 }
