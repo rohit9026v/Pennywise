@@ -1082,7 +1082,7 @@ function deleteExp(delBtn) {
   if (selectedOption.id === "Category-total") {
     delCategory(selectedOption, wrapper);
   } else {
-    delSingleExp(selectedOption);
+    delSingleExp(list, selectedOption);
   }
 
   // updateUI();
@@ -1112,13 +1112,16 @@ function delCategory(selectedOption, wrapper) {
   }
 }
 
-function delSingleExp(selectedOption) {
+function delSingleExp(list, selectedOption) {
   if (confirm("Are you sure you want to delete this expense")) {
     expenseArr = expenseArr.filter(
       (item) => item.id !== Number(selectedOption.id),
     );
+    selectedOption.remove();
+    list.selectedIndex = 0;
+    list.dispatchEvent(new Event("change", { bubbles: true }));
+    setLocal("expense", expenseArr);
   } else {
     return;
   }
-  setLocal("expense", expenseArr);
 }
