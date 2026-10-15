@@ -891,7 +891,7 @@ function deleteExpRow(delBtn) {
 }
 
 //Function for edit button in Category card
-
+let editingList = null;
 function editExp(editBtn) {
   const isExisted = document.querySelector(".edit-wrapper");
   if (isExisted) {
@@ -900,18 +900,19 @@ function editExp(editBtn) {
   }
 
   let currentCard = editBtn.closest(".exp-dis");
-
-  const expItem = currentCard.querySelector(".list");
-  if (expItem.selectedOptions[0].id === "Category-total") {
+  editingList = currentCard.querySelector("#expenseSelect");
+  if (editingList.selectedOptions[0].id === "Category-total") {
     alert("You can't update entire category. Kindly select an expense.");
+    editingList = null
     return;
   }
 
   const item = expenseArr.find(
-    (item) => item.id == expItem.selectedOptions[0].id,
+    (item) => item.id == editingList.selectedOptions[0].id,
   );
 
   editId = item.id;
+  editingList.disabled = true;
   const card = createEditCard(item.title, item.expense);
 
   if (card) {
@@ -1056,9 +1057,15 @@ function saveEdit(saveBtn) {
     });
 
     setLocal("expense", expenseArr);
+    editingList.disabled = false;
+    editingList.selectedIndex = 0;
+    editingList.dispatchEvent(new Event("change", { bubbles: true }));
+    editingList = null;
     editId = null;
-    list.selectedIndex = 0;
-    list.dispatchEvent(new Event("change", { bubbles: true }));
+    const editWrapper = saveBtn.closest(".edit-wrapper");
+    if (editWrapper) {
+      editWrapper.remove();
+    }
     updateUI();
   }
 }
@@ -1070,7 +1077,11 @@ function cancelEdit(cancelBtn) {
   if (editWrapper) {
     editWrapper.remove();
   }
+  editingList.disabled = false;
+  editingList.selectedIndex = 0;
+  editingList.dispatchEvent(new Event("change", { bubbles: true }));
   editId = null;
+  editingList = null;
 }
 
 //function for delete button in Edit card  to be removed
