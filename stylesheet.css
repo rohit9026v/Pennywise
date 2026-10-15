@@ -797,7 +797,7 @@ canvas {
   border-radius: 50%;
   outline: none;
   border: none;
-  object-fit: cover;
+  object-fit: contain;
   transition: 100ms;
   overflow: hidden;
   padding: 3px;

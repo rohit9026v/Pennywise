@@ -903,7 +903,7 @@ function editExp(editBtn) {
   editingList = currentCard.querySelector("#expenseSelect");
   if (editingList.selectedOptions[0].id === "Category-total") {
     alert("You can't update entire category. Kindly select an expense.");
-    editingList = null
+    editingList = null;
     return;
   }
 
@@ -1057,6 +1057,8 @@ function saveEdit(saveBtn) {
     });
 
     setLocal("expense", expenseArr);
+    const option = editingList.querySelector(`option[id="${editId}"]`);
+    option.innerText = title;
     editingList.disabled = false;
     editingList.selectedIndex = 0;
     editingList.dispatchEvent(new Event("change", { bubbles: true }));
