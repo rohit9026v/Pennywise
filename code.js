@@ -642,7 +642,7 @@ function viewAllExp(viewAllBtn) {
 
 //View-all card created
 
-function createViewAllCard(filteredArr,currentCatCard) {
+function createViewAllCard(filteredArr, currentCatCard) {
   const isExisted = document.querySelector(".viewallWrapper");
   if (isExisted) {
     alert("One ViewAll card is already opened. Kindly close one");
@@ -785,17 +785,15 @@ function createViewAllCard(filteredArr,currentCatCard) {
 
   table.appendChild(tbody);
   tableWrapper.appendChild(table);
-  attachEventOnTable(table,currentCatCard);
+  attachEventOnTable(table, currentCatCard);
   wrapperDiv.appendChild(tableWrapper);
-  attachEventOnViewAllCard(wrapperDiv,currentCatCard);
+  attachEventOnViewAllCard(wrapperDiv, currentCatCard);
   return wrapperDiv;
 }
 
-
-
 //event on button in view all card
 
-function attachEventOnViewAllCard(wrapper,currentCatCard) {
+function attachEventOnViewAllCard(wrapper, currentCatCard) {
   wrapper.addEventListener("click", (e) => {
     const closeBtn = e.target.closest("#viewall-closebtn");
     const printBtn = e.target.closest("#viewall-printbtn");
@@ -820,7 +818,7 @@ function attachEventOnViewAllCard(wrapper,currentCatCard) {
 
 //event on table action buttons in viewAll Card
 
-function attachEventOnTable(table,currentCatCard) {
+function attachEventOnTable(table, currentCatCard) {
   table.addEventListener("click", (e) => {
     const editBtn = e.target.closest("#viewall-edit-btn");
     const delBtn = e.target.closest("#viewall-del-btn");
@@ -830,9 +828,9 @@ function attachEventOnTable(table,currentCatCard) {
     }
 
     if (editBtn) {
-      editExpRow(editBtn,currentCatCard);
+      editExpRow(editBtn, currentCatCard);
     } else if (delBtn) {
-      deleteExpRow(delBtn,currentCatCard);
+      deleteExpRow(delBtn, currentCatCard);
     }
   });
 }
@@ -840,7 +838,7 @@ function attachEventOnTable(table,currentCatCard) {
 //Edit function in view all table
 
 let editId = null;
-function editExpRow(editBtn,currentCatCard) {
+function editExpRow(editBtn, currentCatCard) {
   const row = editBtn.closest("tr");
   const amountCell = row.querySelector("[data-field='amount']");
   const titleCell = row.querySelector("[data-field='title']");
@@ -859,22 +857,46 @@ function editExpRow(editBtn,currentCatCard) {
 
 //Delete function in view all table
 
-function deleteExpRow(delBtn,currentCatCard) {
+function deleteExpRow(delBtn, currentCatCard) {
   if (confirm("Are you sure! you want to delete this expense?")) {
     const row = delBtn.closest("tr");
     const id = Number(row.dataset.id);
     const tableWrapper = row.closest(".viewallWrapper");
-    const deletedExp = expenseArr.find((item) => item.id === id);
-    const deletedExpCategory = deletedExp.category;
+    const list = currentCatCard.querySelector("#expenseSelect");
+    const selectedOption = list.selectedOptions[0];
+    const category = selectedOption.dataset.category;
 
-    expenseArr = expenseArr.filter((item) => item.id !== id);
+    if (selectedOption.id === "Category-total") {
+      expenseArr = expenseArr.filter((item) => item.id !== id);
+      const deletedOption = list.querySelector(`[id="${id}"]`)
+      console.log(deletedOption);
+      const remainingExp = expenseArr.filter(
+        (item) => item.category === category,
+      );
+      if (!remainingExp.length) {
+        tableWrapper.remove();
+        currentCatCard.remove();
+        removeCategoryOptions(category);
+      } else {
+        row.remove();
+        deletedOption.remove()
+        list.selectedIndex = 0;
+        list.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    } else {
+      expenseArr = expenseArr.filter((item) => item.id !== id);
+      tableWrapper.remove();
+      selectedOption.remove();
+      if (list.options.length === 1) {
+        currentCatCard.remove();
+        removeCategoryOptions(category);
+      } else {
+        list.selectedIndex = 0;
+        list.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
 
     setLocal("expense", expenseArr);
-    const shouldRemoveTable = refreshCatCard(row, id, deletedExpCategory,currentCatCard);
-    if (shouldRemoveTable) {
-      tableWrapper.remove();
-    } 
-    row.remove();
     updateUI();
   } else {
     return;
@@ -883,7 +905,7 @@ function deleteExpRow(delBtn,currentCatCard) {
 
 //Refresh category Card on deletion
 
-function refreshCatCard(row, id, category,currentCatCard) {
+function refreshCatCard(row, id, category, currentCatCard) {
   const expList = currentCatCard.querySelector("#expenseSelect");
   const option = [...expList.options].find((item) => Number(item.id) === id);
   if (option) {
@@ -891,12 +913,11 @@ function refreshCatCard(row, id, category,currentCatCard) {
   }
   if (expList.options.length === 1) {
     currentCatCard.remove();
-    removeCategoryOptions(category)
+    removeCategoryOptions(category);
     return true;
   }
   return false;
 }
-
 
 //view-all card rendered
 
@@ -905,7 +926,6 @@ function renderedViewAllCard(currentCatCardViewAllBtn) {
   const currentCatCardlist = currentCatCard.querySelector(".list");
   const selected = currentCatCardlist.selectedOptions[0];
   let filteredArr = [];
-;
   currentCatCardViewAllBtn.style.visibility = "hidden";
 
   if (selected.dataset.category) {
@@ -918,13 +938,12 @@ function renderedViewAllCard(currentCatCardViewAllBtn) {
     });
   }
   currentCatCardlist.disabled = true;
-  const card = createViewAllCard(filteredArr,currentCatCard);
+  const card = createViewAllCard(filteredArr, currentCatCard);
 
   if (card) {
     currentCatCard.after(card);
   }
 }
-
 
 //Function for edit button in Category card
 let editingList = null;
@@ -1146,13 +1165,13 @@ function deleteExp(delBtn) {
   const list = wrapper.querySelector("#expenseSelect");
   const selectedOption = list.selectedOptions[0];
   if (selectedOption.id === "Category-total") {
-    delCategory(list,selectedOption,wrapper);
+    delCategory(list, selectedOption, wrapper);
   } else {
-    delSingleExp(list,selectedOption,wrapper);
+    delSingleExp(list, selectedOption, wrapper);
   }
 }
 
-function delCategory(list,selectedOption,wrapper) {
+function delCategory(list, selectedOption, wrapper) {
   if (confirm("Are you sure you want to delete this entire category")) {
     expenseArr = expenseArr.filter(
       (item) => item.category !== selectedOption.dataset.category,
@@ -1163,11 +1182,11 @@ function delCategory(list,selectedOption,wrapper) {
     setLocal("expense", expenseArr);
     updateUI();
   } else {
-    return; 
+    return;
   }
 }
 
-function delSingleExp(list,selectedOption,wrapper) {
+function delSingleExp(list, selectedOption, wrapper) {
   if (confirm("Are you sure you want to delete this expense")) {
     expenseArr = expenseArr.filter(
       (item) => item.id !== Number(selectedOption.id),
@@ -1188,7 +1207,7 @@ function delSingleExp(list,selectedOption,wrapper) {
   }
 }
 
-//function to remove option from Select 
+//function to remove option from Select
 
 function removeCategoryOptions(category) {
   const catFilterOptions = categoryFilt.querySelector(
@@ -1198,12 +1217,11 @@ function removeCategoryOptions(category) {
     `option[value="${category}"]`,
   );
 
-  if(catFilterOptions){
-  catFilterOptions.remove();
+  if (catFilterOptions) {
+    catFilterOptions.remove();
   }
 
-  if(chartFilterOptions){
-     chartFilterOptions.remove();
+  if (chartFilterOptions) {
+    chartFilterOptions.remove();
   }
-
 }
