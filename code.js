@@ -793,8 +793,8 @@ function createViewAllCard(filteredArr, currentCatCard) {
 
 //event on button in view all card
 
-function attachEventOnViewAllCard(wrapper, currentCatCard) {
-  wrapper.addEventListener("click", (e) => {
+function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
+  tableWrapper.addEventListener("click", (e) => {
     const closeBtn = e.target.closest("#viewall-closebtn");
     const printBtn = e.target.closest("#viewall-printbtn");
     const viewBtn = currentCatCard.querySelector("#viewbtn");
@@ -807,11 +807,11 @@ function attachEventOnViewAllCard(wrapper, currentCatCard) {
     if (printBtn) {
       window.print();
     } else if (closeBtn) {
-      if (viewBtn && list) {
+      if (viewBtn) {
         list.disabled = false;
         viewBtn.style.visibility = "visible";
       }
-      wrapper.remove();
+      tableWrapper.remove();
     }
   });
 }
