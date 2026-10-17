@@ -839,18 +839,21 @@ function attachEventOnTable(table, currentCatCard) {
 
 function editExpRow(editBtn, currentCatCard) {
   const row = editBtn.closest("tr");
-  const amountCell = row.querySelector("[data-field='amount']");
-  const titleCell = row.querySelector("[data-field='title']");
+  const tableWrapper = row.closest(".tableWrapper");
   const id = Number(row.dataset.id);
-  let currentCard = editBtn.closest(".viewallWrapper");
-  const card = createEditCard(
-    titleCell.textContent,
-    Number(amountCell.textContent),
-  );
 
-  if (card) {
-    editId = id;
-    currentCard.after(card);
+  const item = expenseArr.find((item) => item.id === id);
+
+  if (item) {
+    const card = createEditCard(item, {
+      type: "table",
+      currentCard: currentCatCard,
+      row: row,
+    });
+
+    if (card) {
+      tableWrapper.after(card);
+    }
   }
 }
 
@@ -955,7 +958,7 @@ function editExp(editBtn) {
 
   const currentCard = editBtn.closest(".exp-dis");
   const list = currentCard.querySelector("#expenseSelect");
-  const deleteBtn = currentCard.querySelector("#deletebtn")
+  const deleteBtn = currentCard.querySelector("#deletebtn");
   const id = list.selectedOptions[0].id;
 
   if (id === "Category-total") {
@@ -966,8 +969,11 @@ function editExp(editBtn) {
   const item = expenseArr.find((item) => item.id == id);
 
   list.disabled = true;
-  deleteBtn.disabled = true
-  const card = createEditCard(item, currentCard);
+  deleteBtn.disabled = true;
+  const card = createEditCard(item, {
+    type: "category",
+    currentCard: currentCard,
+  });
 
   if (card) {
     currentCard.after(card);
@@ -976,7 +982,7 @@ function editExp(editBtn) {
 
 //Create edit card
 
-function createEditCard(item, currentCard) {
+function createEditCard(item, context) {
   const isExisted = document.querySelector(".edit-wrapper");
   if (isExisted) {
     alert("Kindly save an existing edit!");
@@ -1058,22 +1064,22 @@ function createEditCard(item, currentCard) {
   optionsDiv.appendChild(delBtn);
 
   editWrapper.appendChild(optionsDiv);
-  attactEvtOnEditCard(editWrapper, currentCard);
+  attactEvtOnEditCard(editWrapper, context);
   return editWrapper;
 }
 
 //Event on Edit card
 
-function attactEvtOnEditCard(editWrapper, currentCard) {
+function attactEvtOnEditCard(editWrapper, context) {
   editWrapper.addEventListener("click", (e) => {
     const saveBtn = e.target.closest("#save-btn");
     const delBtn = e.target.closest("#delEdit");
     const cancleBtn = e.target.closest("#cancelEdit");
 
     if (saveBtn) {
-      saveEdit(editWrapper, currentCard);
+      saveEdit(editWrapper, context);
     } else if (cancleBtn) {
-      cancelEdit(editWrapper, currentCard);
+      cancelEdit(editWrapper, context);
     } else if (delBtn) {
       deleteEdit(delBtn);
     }
@@ -1082,39 +1088,57 @@ function attactEvtOnEditCard(editWrapper, currentCard) {
 
 //function on save button in Edit card
 
-function saveEdit(editWrapper, currentCard) {
+function saveEdit(editWrapper, context) {
+  const list = context.currentCard.querySelector("#expenseSelect");
   const editTitleInp = editWrapper.querySelector("#edit-title");
   const editAmtInp = editWrapper.querySelector("#edit-amount");
   const title = editTitleInp.value;
   const amount = Number(editAmtInp.value);
-  const list = currentCard.querySelector("#expenseSelect");
-  const deleteBtn = currentCard.querySelector("#deletebtn")
-  const selectedOption = list.selectedOptions[0];
 
   if (title.trim() === "" || !Number.isFinite(amount) || amount <= 0) {
     return;
   }
 
+  if(!list){
+    return
+  }
+
   const confirmation = confirm("Do you want to save changes");
 
-  if (confirmation) {
-    const item = expenseArr.find((element) => {
-      return element.id === Number(selectedOption.id);
+  const findItem = (id) => {
+    return expenseArr.find((element) => {
+      return element.id === Number(id);
     });
+  };
 
-    if (item) {
-      item.title = title;
-      item.expense = amount;
+  if (confirmation) {
+    let item = null;
+    if (context.type === "category") {
+      const selectedOption = list.selectedOptions[0];
+      const id = selectedOption.id;
+      item = findItem(id);
+      if (!item) return;
+      selectedOption.innerText = title;
+      list.disabled = false;
+      const deleteBtn = context.currentCard.querySelector("#deletebtn");
+      deleteBtn.disabled = false;
+    } else {
+      const rowTitle = context.row.querySelector("[data-field='title']");
+      const rowAmount = context.row.querySelector("[data-field='amount']");
+      const id = context.row.dataset.id;
+      item = findItem(id);
+      if (!item) return;
+      rowTitle.innerText = title;
+      rowAmount.innerText = amount;
     }
 
+    item.title = title;
+    item.expense = amount;
     setLocal("expense", expenseArr);
-    selectedOption.innerText = title;
-    list.disabled = false;
-    deleteBtn.disabled = false
     list.dispatchEvent(new Event("change", { bubbles: true }));
     editWrapper.remove();
     updateUI();
-  }
+  } 
 }
 
 //function on cancel button in Edit card
@@ -1125,9 +1149,9 @@ function cancelEdit(editWrapper, currentCard) {
   }
 
   const list = currentCard.querySelector("#expenseSelect");
-  const deleteBtn = currentCard.querySelector("#deletebtn")
+  const deleteBtn = currentCard.querySelector("#deletebtn");
   list.disabled = false;
-  deleteBtn.disabled = false
+  deleteBtn.disabled = false;
 }
 
 //function for delete button in Edit card  to be removed
