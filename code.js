@@ -799,6 +799,8 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
     const printBtn = e.target.closest("#viewall-printbtn");
     const viewBtn = currentCatCard.querySelector("#viewbtn");
     const list = currentCatCard.querySelector("#expenseSelect");
+    const editBtn = currentCatCard.querySelector("#editbtn");
+    const deleteBtn = currentCatCard.querySelector("#deletebtn");
 
     if (!closeBtn && !printBtn) {
       return;
@@ -809,6 +811,8 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
     } else if (closeBtn) {
       if (viewBtn) {
         list.disabled = false;
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
         viewBtn.style.visibility = "visible";
       }
       tableWrapper.remove();
@@ -923,23 +927,28 @@ function refreshCatCard(row, id, category, currentCatCard) {
 
 //view-all card rendered
 
-function renderedViewAllCard(currentCatCardViewAllBtn) {
-  const currentCatCard = currentCatCardViewAllBtn.closest(".exp-dis");
-  const currentCatCardlist = currentCatCard.querySelector(".list");
-  const selected = currentCatCardlist.selectedOptions[0];
-  let filteredArr = [];
-  currentCatCardViewAllBtn.style.visibility = "hidden";
+function renderedViewAllCard(viewAllBtn) {
+  const currentCatCard = viewAllBtn.closest(".exp-dis");
+  const list = currentCatCard.querySelector(".list");
+  const editBtn = currentCatCard.querySelector("#editbtn");
+  const deleteBtn = currentCatCard.querySelector("#deletebtn");
+  const selectedOption = list.selectedOptions[0];
 
-  if (selected.dataset.category) {
+  let filteredArr = [];
+  viewAllBtn.style.visibility = "hidden";
+
+  if (selectedOption.id === "Category-total") {
     filteredArr = expenseArr.filter((item) => {
-      return item.category === selected.dataset.category;
+      return item.category === selectedOption.dataset.category;
     });
   } else {
     filteredArr = expenseArr.filter((item) => {
-      return item.id === Number(selected.id);
+      return item.id === Number(selectedOption.id);
     });
   }
-  currentCatCardlist.disabled = true;
+  list.disabled = true;
+  editBtn.disabled = true;
+  deleteBtn.disabled = true;
   const card = createViewAllCard(filteredArr, currentCatCard);
 
   if (card) {
@@ -959,6 +968,7 @@ function editExp(editBtn) {
   const currentCard = editBtn.closest(".exp-dis");
   const list = currentCard.querySelector("#expenseSelect");
   const deleteBtn = currentCard.querySelector("#deletebtn");
+  const viewAllBtn = currentCard.querySelector("#viewbtn");
   const id = list.selectedOptions[0].id;
 
   if (id === "Category-total") {
@@ -970,6 +980,7 @@ function editExp(editBtn) {
 
   list.disabled = true;
   deleteBtn.disabled = true;
+  viewAllBtn.disabled = true;
   const card = createEditCard(item, {
     type: "category",
     currentCard: currentCard,
@@ -1090,6 +1101,8 @@ function attactEvtOnEditCard(editWrapper, context) {
 
 function saveEdit(editWrapper, context) {
   const list = context.currentCard.querySelector("#expenseSelect");
+  const deleteBtn = context.currentCard.querySelector("#deletebtn");
+  const viewAllBtn = context.currentCard.querySelector("#viewbtn");
   const editTitleInp = editWrapper.querySelector("#edit-title");
   const editAmtInp = editWrapper.querySelector("#edit-amount");
   const title = editTitleInp.value;
@@ -1099,8 +1112,8 @@ function saveEdit(editWrapper, context) {
     return;
   }
 
-  if(!list){
-    return
+  if (!list) {
+    return;
   }
 
   const confirmation = confirm("Do you want to save changes");
@@ -1120,13 +1133,15 @@ function saveEdit(editWrapper, context) {
       if (!item) return;
       selectedOption.innerText = title;
       list.disabled = false;
-      const deleteBtn = context.currentCard.querySelector("#deletebtn");
+      viewAllBtn.disabled = false;
       deleteBtn.disabled = false;
     } else {
       const rowTitle = context.row.querySelector("[data-field='title']");
       const rowAmount = context.row.querySelector("[data-field='amount']");
       const id = context.row.dataset.id;
       item = findItem(id);
+      const selectedOption = list.querySelector(`[id='${id}']`);
+      selectedOption.innerText = title;
       if (!item) return;
       rowTitle.innerText = title;
       rowAmount.innerText = amount;
@@ -1138,20 +1153,24 @@ function saveEdit(editWrapper, context) {
     list.dispatchEvent(new Event("change", { bubbles: true }));
     editWrapper.remove();
     updateUI();
-  } 
+  }
 }
 
 //function on cancel button in Edit card
 
-function cancelEdit(editWrapper, currentCard) {
+function cancelEdit(editWrapper, context) {
   if (editWrapper) {
     editWrapper.remove();
   }
 
-  const list = currentCard.querySelector("#expenseSelect");
-  const deleteBtn = currentCard.querySelector("#deletebtn");
-  list.disabled = false;
-  deleteBtn.disabled = false;
+  if ((context.type = "category")) {
+    const list = context.currentCard.querySelector("#expenseSelect");
+    const deleteBtn = context.currentCard.querySelector("#deletebtn");
+    const viewAllBtn = context.currentCard.querySelector("#viewbtn");
+    list.disabled = false;
+    deleteBtn.disabled = false;
+    viewAllBtn.disabled = false;
+  }
 }
 
 //function for delete button in Edit card  to be removed
