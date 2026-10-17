@@ -742,6 +742,15 @@ canvas {
   width: 100%;
 }
 
+.list:disabled,
+.viewbtn:disabled,
+.editExp:disabled,
+.delete-btn:disabled {
+  cursor: not-allowed;
+  scale: 1;
+  opacity: 0.4;
+}
+
 .footerwrapper {
   display: flex;
   flex-direction: column;
