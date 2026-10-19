@@ -61,8 +61,6 @@ function updateUI() {
   totalExpdis();
   totalEntries();
   monthTExp();
-  // renderCategories(categoryFilt, true);
-  // sortBy();
   renderTotChart("bar"); //Total expense chart Updated
   renderCatChart("clothing"); //Category chart Updated
 }
@@ -143,7 +141,7 @@ addButton.addEventListener("click", () => {
   inpTitle.value = ""; //title field set to empty
   // comment.value = ""; bug still present
   upsertCatCard(newExp);
-  // updateUI();
+  updateUI();
 });
 
 //function for upsert Category card

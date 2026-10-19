@@ -1,5 +1,14 @@
 const drawChart = (canvas, type, data) => {
   const existingChart = Chart.getChart(canvas);
+
+  if (existingChart && existingChart.config.type === type) {
+    existingChart.data.labels = data.map((item) => item.category);
+    existingChart.data.datasets[0].data = data.map((item) => item.totalExpense);
+
+    existingChart.update();
+    return existingChart;
+  }
+
   if (existingChart) {
     existingChart.destroy();
   }
@@ -12,13 +21,27 @@ const drawChart = (canvas, type, data) => {
         {
           label: data.map((item) => item.category),
           data: data.map((item) => item.totalExpense),
-          borderWidth: 2,
+          borderWidth: 1,
         },
       ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      plugins: {
+        colors: {
+          enabled: true,
+        },
+      },
+      animations: {
+        tension: {
+          duration: 1000,
+          easing: "linear",
+          from: 1,
+          to: 0,
+          loop: true,
+        },
+      },
       scales: {
         y: {
           beginAtZero: true,
