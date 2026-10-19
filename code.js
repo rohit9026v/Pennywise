@@ -139,7 +139,9 @@ addButton.addEventListener("click", () => {
   addSec.classList.add("hidden"); //add sec hide
   inpAmount.value = ""; //amount field set to empty
   inpTitle.value = ""; //title field set to empty
-  // comment.value = ""; bug still present
+  inpCategory.selectedIndex[0];
+  inpPaymentType.selectedIndex[0];
+  inpComment.value = "";
   upsertCatCard(newExp);
   updateUI();
 });
@@ -907,22 +909,6 @@ function deleteExpRow(delBtn, currentCatCard) {
   }
 }
 
-//Refresh category Card on deletion
-
-function refreshCatCard(row, id, category, currentCatCard) {
-  const expList = currentCatCard.querySelector("#expenseSelect");
-  const option = [...expList.options].find((item) => Number(item.id) === id);
-  if (option) {
-    option.remove();
-  }
-  if (expList.options.length === 1) {
-    currentCatCard.remove();
-    removeCategoryOptions(category);
-    return true;
-  }
-  return false;
-}
-
 //view-all card rendered
 
 function renderedViewAllCard(viewAllBtn) {
@@ -1204,6 +1190,7 @@ function delCategory(list, selectedOption, wrapper) {
       (item) => item.category !== selectedOption.dataset.category,
     );
     wrapper.remove();
+
     const category = selectedOption.dataset.category;
     removeCategoryOptions(category);
     setLocal("expense", expenseArr);
