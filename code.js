@@ -257,7 +257,8 @@ function renderTotChart(type) {
   drawChart(totalCanvas, type, expArr);
 }
 
-renderTotChart("bar");
+const totalSelect = chartWrapper.querySelector("#total-select");
+renderTotChart(totalSelect.value);
 
 //dynamic category charts options
 
@@ -278,7 +279,10 @@ function renderCatChart(category) {
   drawChart(categoryCanvas, "doughnut", tempArr);
 }
 
-renderCatChart("clothing");
+const catChartSelect = chartWrapper.querySelector("#category-select");
+if (catChartSelect.value) {
+  renderCatChart(catChartSelect.value);
+}
 
 //dynamic Select option
 
