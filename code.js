@@ -801,10 +801,6 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
   tableWrapper.addEventListener("click", (e) => {
     const closeBtn = e.target.closest("#viewall-closebtn");
     const printBtn = e.target.closest("#viewall-printbtn");
-    const viewBtn = currentCatCard.querySelector("#viewbtn");
-    const list = currentCatCard.querySelector("#expenseSelect");
-    const editBtn = currentCatCard.querySelector("#editbtn");
-    const deleteBtn = currentCatCard.querySelector("#deletebtn");
 
     if (!closeBtn && !printBtn) {
       return;
@@ -813,11 +809,15 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
     if (printBtn) {
       window.print();
     } else if (closeBtn) {
-      if (viewBtn) {
+      if (currentCatCard) {
+        const viewBtn = currentCatCard.querySelector("#viewbtn");
+        const list = currentCatCard.querySelector("#expenseSelect");
+        const editBtn = currentCatCard.querySelector("#editbtn");
         list.disabled = false;
         editBtn.disabled = false;
         deleteBtn.disabled = false;
         viewBtn.style.visibility = "visible";
+        const deleteBtn = currentCatCard.querySelector("#deletebtn");
       }
       tableWrapper.remove();
     }
@@ -1094,19 +1094,20 @@ function attactEvtOnEditCard(editWrapper, context) {
 //function on save button in Edit card
 
 function saveEdit(editWrapper, context) {
-  const list = context.currentCard.querySelector("#expenseSelect");
-  const deleteBtn = context.currentCard.querySelector("#deletebtn");
-  const viewAllBtn = context.currentCard.querySelector("#viewbtn");
+  let list, deleteBtn, viewAllBtn;
+
+  if (context.currentCard) {
+    list = context.currentCard.querySelector("#expenseSelect");
+    deleteBtn = context.currentCard.querySelector("#deletebtn");
+    viewAllBtn = context.currentCard.querySelector("#viewbtn");
+  }
+
   const editTitleInp = editWrapper.querySelector("#edit-title");
   const editAmtInp = editWrapper.querySelector("#edit-amount");
   const title = editTitleInp.value;
   const amount = Number(editAmtInp.value);
 
   if (title.trim() === "" || !Number.isFinite(amount) || amount <= 0) {
-    return;
-  }
-
-  if (!list) {
     return;
   }
 
@@ -1134,8 +1135,10 @@ function saveEdit(editWrapper, context) {
       const rowAmount = context.row.querySelector("[data-field='amount']");
       const id = context.row.dataset.id;
       item = findItem(id);
-      const selectedOption = list.querySelector(`[id='${id}']`);
-      selectedOption.innerText = title;
+      if (list) {
+        const selectedOption = list.querySelector(`[id='${id}']`);
+        selectedOption.innerText = title;
+      }
       if (!item) return;
       rowTitle.innerText = title;
       rowAmount.innerText = amount;
@@ -1144,7 +1147,10 @@ function saveEdit(editWrapper, context) {
     item.title = title;
     item.expense = amount;
     setLocal("expense", expenseArr);
-    list.dispatchEvent(new Event("change", { bubbles: true }));
+    if (list) {
+      list.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
     editWrapper.remove();
     updateUI();
   }
@@ -1157,7 +1163,7 @@ function cancelEdit(editWrapper, context) {
     editWrapper.remove();
   }
 
-  if ((context.type = "category")) {
+  if (context.type === "category") {
     const list = context.currentCard.querySelector("#expenseSelect");
     const deleteBtn = context.currentCard.querySelector("#deletebtn");
     const viewAllBtn = context.currentCard.querySelector("#viewbtn");
