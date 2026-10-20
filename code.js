@@ -875,11 +875,13 @@ function deleteExpRow(delBtn, currentCatCard) {
     const list = currentCatCard.querySelector("#expenseSelect");
     const selectedOption = list.selectedOptions[0];
     const category = selectedOption.dataset.category;
+    const deleteBtn = currentCatCard.querySelector("#deleteBtn");
+    const editBtn = currentCatCard.querySelector("#editBtn");
+    const viewAllBtn = currentCatCard.querySelector("#viewBtn");
 
     if (selectedOption.id === "Category-total") {
       expenseArr = expenseArr.filter((item) => item.id !== id);
       const deletedOption = list.querySelector(`[id="${id}"]`);
-      console.log(deletedOption);
       const remainingExp = expenseArr.filter(
         (item) => item.category === category,
       );
@@ -901,6 +903,10 @@ function deleteExpRow(delBtn, currentCatCard) {
         currentCatCard.remove();
         removeCategoryOptions(category);
       } else {
+        viewBtn.disabled = false;
+        delBtn.disabled = false;
+        editBtn.disabled = false;
+        list.disabled = false;
         list.selectedIndex = 0;
         list.dispatchEvent(new Event("change", { bubbles: true }));
       }
