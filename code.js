@@ -254,10 +254,13 @@ chartWrapper.addEventListener("change", (e) => {
 const totalCanvas = document.querySelector("#total-canvas");
 function renderTotChart() {
   const totalChartSelect = chartWrapper.querySelector("#total-select");
-  const type = totalChartSelect.value
+  const type = totalChartSelect.value;
   const expArr = findTotal();
+  if (!expArr.length) return;
   drawChart(totalCanvas, type, expArr);
 }
+
+renderTotChart();
 
 //dynamic category charts options
 
@@ -266,25 +269,23 @@ renderCategories(categoryChart);
 //dynamic category chart functinn
 
 const categoryCanvas = document.querySelector("#category-canvas");
-function renderCatChart(category) {
-  const expArr = expenseArr.filter((item) => item.category === category);
-  //Temp fix
+function renderCatChart() {
+  const catChartSelect = chartWrapper.querySelector("#category-select");
+  const selectValue = catChartSelect.value;
+
+  const expArr = expenseArr.filter((item) => item.category === selectValue);
+
   const tempArr = expArr.map((item) => {
     return {
       category: item.title,
       totalExpense: item.expense,
     };
   });
-
-  const catChartSelect = chartWrapper.querySelector("#category-select");
-  
+  if (!tempArr.length) return;
   drawChart(categoryCanvas, "doughnut", tempArr);
 }
 
-const catChartSelect = chartWrapper.querySelector("#category-select");
-if (catChartSelect.value) {
-  renderCatChart(catChartSelect.value);
-}
+renderCatChart();
 
 //dynamic Select option
 
