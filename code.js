@@ -816,11 +816,11 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
         const viewBtn = currentCatCard.querySelector("#viewbtn");
         const list = currentCatCard.querySelector("#expenseSelect");
         const editBtn = currentCatCard.querySelector("#editbtn");
+        const deleteBtn = currentCatCard.querySelector("#deletebtn");
         list.disabled = false;
         editBtn.disabled = false;
         deleteBtn.disabled = false;
         viewBtn.style.visibility = "visible";
-        const deleteBtn = currentCatCard.querySelector("#deletebtn");
       }
       tableWrapper.remove();
     }
