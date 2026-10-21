@@ -1059,17 +1059,7 @@ function createEditCard(item, context) {
   cancelBtn.appendChild(cancelImg);
   optionsDiv.appendChild(cancelBtn);
 
-  const delBtn = document.createElement("button");
-  delBtn.id = "delEdit";
-  delBtn.className = "deledit-btn";
-  delBtn.type = "button";
 
-  const delImg = document.createElement("img");
-  delImg.className = "edit-icons";
-  delImg.src = "./assets/delete.png";
-  delImg.alt = "delete icon";
-  delBtn.appendChild(delImg);
-  optionsDiv.appendChild(delBtn);
 
   editWrapper.appendChild(optionsDiv);
   attactEvtOnEditCard(editWrapper, context);
@@ -1176,19 +1166,7 @@ function cancelEdit(editWrapper, context) {
   }
 }
 
-//function for delete button in Edit card  to be removed
 
-function deleteEdit(delBtn) {
-  const confirmation = confirm("Do you want to delete this expense");
-
-  if (confirmation) {
-    expenseArr = expenseArr.filter((element) => element.id !== editId);
-
-    setLocal("expense", expenseArr);
-    editId = null;
-    updateUI();
-  }
-}
 
 //Event on delete button in category expense card
 
