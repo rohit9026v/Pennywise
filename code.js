@@ -139,8 +139,8 @@ addButton.addEventListener("click", () => {
   addSec.classList.add("hidden");
   inpAmount.value = "";
   inpTitle.value = "";
-  inpCategory.selectedIndex[0];
-  inpPaymentType.selectedIndex[0];
+  inpCategory.selectedIndex = 0;
+  inpPaymentType.selectedIndex = 0;
   inpComment.value = "";
   upsertCatCard(newExp);
   updateUI();
