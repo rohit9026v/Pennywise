@@ -55,14 +55,14 @@ function findTotal() {
   return categoryTotal;
 }
 
-//Fn for updating UI
+//Function for updating UI
 
 function updateUI() {
   totalExpdis();
   totalEntries();
   monthTExp();
-  renderTotChart("bar"); //Total expense chart Updated
-  renderCatChart("clothing"); //Category chart Updated
+  renderTotChart(); //Total expense chart Updated
+  renderCatChart(); //Category chart Updated
 }
 
 //dark mode
@@ -135,10 +135,10 @@ addButton.addEventListener("click", () => {
   expenseArr.push(newExp);
 
   setLocal("expense", expenseArr);
-  floatingBtn.classList.remove("hidden"); //floating button visible
-  addSec.classList.add("hidden"); //add sec hide
-  inpAmount.value = ""; //amount field set to empty
-  inpTitle.value = ""; //title field set to empty
+  floatingBtn.classList.remove("hidden");
+  addSec.classList.add("hidden");
+  inpAmount.value = "";
+  inpTitle.value = "";
   inpCategory.selectedIndex[0];
   inpPaymentType.selectedIndex[0];
   inpComment.value = "";
@@ -175,7 +175,7 @@ function updateCatCard(Exp) {
   updateUI();
 }
 
-//functioon to add category card in DOM
+//function to add category card in DOM
 
 function addCatCard(Exp) {
   const card = createCategoryCard(Exp.category, Exp.expense, Exp.time);
@@ -252,13 +252,12 @@ chartWrapper.addEventListener("change", (e) => {
 //dynamic Total chart fuction
 
 const totalCanvas = document.querySelector("#total-canvas");
-function renderTotChart(type) {
+function renderTotChart() {
+  const totalChartSelect = chartWrapper.querySelector("#total-select");
+  const type = totalChartSelect.value
   const expArr = findTotal();
   drawChart(totalCanvas, type, expArr);
 }
-
-const totalSelect = chartWrapper.querySelector("#total-select");
-renderTotChart(totalSelect.value);
 
 //dynamic category charts options
 
@@ -276,6 +275,9 @@ function renderCatChart(category) {
       totalExpense: item.expense,
     };
   });
+
+  const catChartSelect = chartWrapper.querySelector("#category-select");
+  
   drawChart(categoryCanvas, "doughnut", tempArr);
 }
 
