@@ -5,6 +5,10 @@ const drawChart = (canvas, type, data) => {
     existingChart.data.labels = data.map((item) => item.category);
     existingChart.data.datasets[0].data = data.map((item) => item.totalExpense);
 
+    existingChart.data.datasets[0].backgroundColor = data.map(
+      (_, index) => `hsl(${(index * 360) / data.length}, 70%, 75%)`,
+    );
+
     existingChart.update();
     return existingChart;
   }
@@ -21,6 +25,9 @@ const drawChart = (canvas, type, data) => {
         {
           label: data.map((item) => item.category),
           data: data.map((item) => item.totalExpense),
+          backgroundColor: data.map(
+            (_, index) => `hsl(${(index * 360) / data.length}, 70%, 75%)`,
+          ),
           borderWidth: 1,
         },
       ],
