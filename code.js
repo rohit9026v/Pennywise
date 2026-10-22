@@ -879,25 +879,7 @@ function deleteExpRow(delBtn, currentCatCard) {
     const id = Number(row.dataset.id);
     const tableWrapper = row.closest(".viewallWrapper");
 
-    //for search to be removed
 
-    // if (!currentCatCard) {
-    //   const deletedOption = expenseArr.find((item) => item.id === id);
-    //   const categoryCard = disWrapper.querySelector(
-    //     `.${deletedOption.category}`,
-    //   );
-    //   expenseArr = expenseArr.filter((item) => item.id !== id);
-    //   tableWrapper.remove();
-    //   if (!findRemaining(deletedOption.category).length) {
-    //     categoryCard.remove();
-    //     removeCategoryOptions(deletedOption.category);
-    //   } else {
-    //   }
-    //   setLocal("expense", expenseArr);
-    //   updateUI();
-    //   destroyChart();
-    //   return;
-    // }
 
     const list = currentCatCard.querySelector("#expenseSelect");
     const selectedOption = list.selectedOptions[0];
