@@ -1059,8 +1059,6 @@ function createEditCard(item, context) {
   cancelBtn.appendChild(cancelImg);
   optionsDiv.appendChild(cancelBtn);
 
-
-
   editWrapper.appendChild(optionsDiv);
   attactEvtOnEditCard(editWrapper, context);
   return editWrapper;
@@ -1166,8 +1164,6 @@ function cancelEdit(editWrapper, context) {
   }
 }
 
-
-
 //Event on delete button in category expense card
 
 function deleteExp(delBtn) {
@@ -1207,6 +1203,7 @@ function delSingleExp(list, selectedOption, wrapper) {
     if (list.options.length === 1) {
       wrapper.remove();
       removeCategoryOptions(category);
+      destroyChart();
     } else {
       list.selectedIndex = 0;
       list.dispatchEvent(new Event("change", { bubbles: true }));
@@ -1234,5 +1231,24 @@ function removeCategoryOptions(category) {
 
   if (chartFilterOptions) {
     chartFilterOptions.remove();
+  }
+
+  destroyChart();
+
+}
+
+//function to remove chart from DOM
+
+function destroyChart() {
+  const isAnyCardExists = disWrapper.querySelector(".exp-dis");
+  if (!isAnyCardExists) {
+    const totalChartInstance = Chart.getChart(totalCanvas);
+    const categoryChartInstance = Chart.getChart(categoryCanvas);
+    if (totalChartInstance) {
+      totalChartInstance.destroy();
+    }
+    if (categoryChartInstance) {
+      categoryChartInstance.destroy();
+    }
   }
 }
