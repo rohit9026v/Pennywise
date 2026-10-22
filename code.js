@@ -169,6 +169,7 @@ function updateCatCard(Exp) {
   const option = document.createElement("option");
   option.innerText = Exp.title;
   option.id = Exp.id;
+  option.dataset.category = category;
   list.appendChild(option);
   list.selectedIndex = 0;
   list.dispatchEvent(new Event("change", { bubbles: true }));
@@ -396,7 +397,7 @@ searchBtn.addEventListener("click", (e) => {
   }
   const resultCat = filteredArr[0].category;
   const currentCatCard = disWrapper.querySelector(`.${resultCat}`);
-  const card = createViewAllCard(filteredArr,currentCatCard);
+  const card = createViewAllCard(filteredArr, currentCatCard);
   const currentCard = e.target.closest(".transaction-controls");
   if (card) {
     currentCard.after(card);
@@ -826,6 +827,10 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
         viewBtn.style.visibility = "visible";
       }
       tableWrapper.remove();
+
+      if (search) {
+        search.value = "";
+      }
     }
   });
 }
@@ -878,8 +883,6 @@ function deleteExpRow(delBtn, currentCatCard) {
     const row = delBtn.closest("tr");
     const id = Number(row.dataset.id);
     const tableWrapper = row.closest(".viewallWrapper");
-
-
 
     const list = currentCatCard.querySelector("#expenseSelect");
     const selectedOption = list.selectedOptions[0];
