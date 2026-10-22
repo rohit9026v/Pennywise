@@ -22,8 +22,14 @@ setInterval(() => {
 //Getting data from Local Storage...
 
 function getExpense() {
-  return JSON.parse(localStorage.getItem("expense")) || [];
+  try {
+    return JSON.parse(localStorage.getItem("expense")) || [];
+  } catch (error) {
+    alert(`Something went wrong: ${error.message}`);
+    return []
+  }
 }
+
 let expenseArr = getExpense();
 
 //Setting data to Local STorage...
@@ -231,7 +237,7 @@ function monthTExp() {
       );
     })
     .reduce((acc, current) => acc + Number(current.expense), 0);
-  tMonth.innerText = `₹ ${filtered}`;
+  tMonth.innerText = `₹ ${filtered.toFixed(2)}`;
 }
 monthTExp();
 
@@ -516,7 +522,7 @@ function createCategoryCard(category, amt, time) {
   expenseDetails.className = "exp-dt";
   const amtPara = document.createElement("p");
   amtPara.className = "exp amount";
-  amtPara.innerText = `₹ ${amt}`; //category final amt is yet to be added
+  amtPara.innerText = `₹ ${amt.toFixed(2)}`;
   amtPara.id = "amount-display";
   expenseDetails.appendChild(amtPara);
   const span = document.createElement("span");
@@ -891,46 +897,35 @@ function deleteExpRow(delBtn, currentCatCard) {
   if (confirm("Are you sure! you want to delete this expense?")) {
     const row = delBtn.closest("tr");
     const id = Number(row.dataset.id);
+    const item = expenseArr.find((item) => item.id === Number(id));
     const tableWrapper = row.closest(".viewallWrapper");
-
+    const tableBody = tableWrapper.querySelector("tbody");
     const list = currentCatCard.querySelector("#expenseSelect");
-    const selectedOption = list.selectedOptions[0];
-    const category = selectedOption.dataset.category;
     const editBtn = currentCatCard.querySelector("#editbtn");
     const deleteBtn = currentCatCard.querySelector("#deletebtn");
     const viewAllBtn = currentCatCard.querySelector("#viewbtn");
 
-    if (selectedOption.id === "Category-total") {
-      const deletedOption = list.querySelector(`[id="${id}"]`);
-      expenseArr = expenseArr.filter((item) => item.id !== id);
+    expenseArr = expenseArr.filter((item) => item.id !== id);
 
-      if (!findRemaining(category).length) {
-        tableWrapper.remove();
-        currentCatCard.remove();
-        removeCategoryOptions(category);
-        destroyChart();
-      } else {
-        row.remove();
-        deletedOption.remove();
-        list.selectedIndex = 0;
-        list.dispatchEvent(new Event("change", { bubbles: true }));
-      }
+    if (!findRemaining(item.category).length) {
+      currentCatCard.remove();
+      removeCategoryOptions(item.category);
+      destroyChart();
     } else {
-      expenseArr = expenseArr.filter((item) => item.id !== id);
+      const deletedOption = list.querySelector(`[id="${id}"]`);
+      deletedOption.remove();
+      list.selectedIndex = 0;
+      list.dispatchEvent(new Event("change", { bubbles: true }));
+    }
+
+    if (tableBody.querySelectorAll("tr").length > 1) {
+      row.remove();
+    } else {
       tableWrapper.remove();
-      selectedOption.remove();
-      if (!findRemaining(category).length) {
-        currentCatCard.remove();
-        removeCategoryOptions(category);
-        destroyChart();
-      } else {
-        list.disabled = false;
-        list.selectedIndex = 0;
-        list.dispatchEvent(new Event("change", { bubbles: true }));
-        viewAllBtn.disabled = false;
-        editBtn.disabled = false;
-        deleteBtn.disabled = false;
-      }
+      list.disabled = false;
+      viewAllBtn.disabled = false;
+      editBtn.disabled = false;
+      deleteBtn.disabled = false;
     }
 
     setLocal("expense", expenseArr);
