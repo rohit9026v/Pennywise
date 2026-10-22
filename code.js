@@ -796,7 +796,7 @@ function createViewAllCard(filteredArr, currentCatCard) {
 
   table.appendChild(tbody);
   tableWrapper.appendChild(table);
-  attachEventOnTable(table, currentCatCard);
+  attachEventOnTable(table);
   wrapperDiv.appendChild(tableWrapper);
   attachEventOnViewAllCard(wrapperDiv, currentCatCard);
   return wrapperDiv;
@@ -837,7 +837,7 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
 
 //event on table action buttons in viewAll Card
 
-function attachEventOnTable(table, currentCatCard) {
+function attachEventOnTable(table) {
   table.addEventListener("click", (e) => {
     const editBtn = e.target.closest("#viewall-edit-btn");
     const delBtn = e.target.closest("#viewall-del-btn");
@@ -846,10 +846,19 @@ function attachEventOnTable(table, currentCatCard) {
       return;
     }
 
-    if (editBtn) {
-      editExpRow(editBtn, currentCatCard);
-    } else if (delBtn) {
-      deleteExpRow(delBtn, currentCatCard);
+    const row = e.target.closest("tr");
+    const rowId = row.dataset.id;
+    const item = expenseArr.find((item) => item.id === Number(rowId));
+    const category = item.category;
+    const currentCard = disWrapper.querySelector(
+      `[data-category="${category}"]`,
+    );
+    if (currentCard) {
+      if (editBtn) {
+        editExpRow(editBtn, currentCard);
+      } else if (delBtn) {
+        deleteExpRow(delBtn, currentCard);
+      }
     }
   });
 }
@@ -891,7 +900,6 @@ function deleteExpRow(delBtn, currentCatCard) {
     const deleteBtn = currentCatCard.querySelector("#deletebtn");
     const viewAllBtn = currentCatCard.querySelector("#viewbtn");
 
-    //for category card
     if (selectedOption.id === "Category-total") {
       const deletedOption = list.querySelector(`[id="${id}"]`);
       expenseArr = expenseArr.filter((item) => item.id !== id);
@@ -946,7 +954,6 @@ function renderedViewAllCard(viewAllBtn) {
   const selectedOption = list.selectedOptions[0];
 
   let filteredArr = [];
-  viewAllBtn.style.visibility = "hidden";
 
   if (selectedOption.id === "Category-total") {
     filteredArr = expenseArr.filter((item) => {
@@ -957,12 +964,14 @@ function renderedViewAllCard(viewAllBtn) {
       return item.id === Number(selectedOption.id);
     });
   }
-  list.disabled = true;
-  editBtn.disabled = true;
-  deleteBtn.disabled = true;
+
   const card = createViewAllCard(filteredArr, currentCatCard);
 
   if (card) {
+    viewAllBtn.style.visibility = "hidden";
+    list.disabled = true;
+    editBtn.disabled = true;
+    deleteBtn.disabled = true;
     currentCatCard.after(card);
   }
 }
