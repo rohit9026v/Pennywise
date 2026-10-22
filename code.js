@@ -202,10 +202,11 @@ floatingBtn.addEventListener("click", () => {
 //total expense display
 
 function totalExpdis() {
-  let exp = Math.ceil(
-    expenseArr.reduce((acc, current) => acc + Number(current.expense), 0),
+  let exp = expenseArr.reduce(
+    (acc, current) => acc + Number(current.expense),
+    0,
   );
-  tAmount.innerText = `₹ ${exp}`;
+  tAmount.innerText = `₹ ${exp.toFixed(2)}`;
 }
 totalExpdis();
 
@@ -393,7 +394,9 @@ searchBtn.addEventListener("click", (e) => {
     alert("No result found");
     return;
   }
-  const card = createViewAllCard(filteredArr);
+  const resultCat = filteredArr[0].category;
+  const currentCatCard = disWrapper.querySelector(`.${resultCat}`);
+  const card = createViewAllCard(filteredArr,currentCatCard);
   const currentCard = e.target.closest(".transaction-controls");
   if (card) {
     currentCard.after(card);
@@ -875,23 +878,44 @@ function deleteExpRow(delBtn, currentCatCard) {
     const row = delBtn.closest("tr");
     const id = Number(row.dataset.id);
     const tableWrapper = row.closest(".viewallWrapper");
+
+    //for search to be removed
+
+    // if (!currentCatCard) {
+    //   const deletedOption = expenseArr.find((item) => item.id === id);
+    //   const categoryCard = disWrapper.querySelector(
+    //     `.${deletedOption.category}`,
+    //   );
+    //   expenseArr = expenseArr.filter((item) => item.id !== id);
+    //   tableWrapper.remove();
+    //   if (!findRemaining(deletedOption.category).length) {
+    //     categoryCard.remove();
+    //     removeCategoryOptions(deletedOption.category);
+    //   } else {
+    //   }
+    //   setLocal("expense", expenseArr);
+    //   updateUI();
+    //   destroyChart();
+    //   return;
+    // }
+
     const list = currentCatCard.querySelector("#expenseSelect");
     const selectedOption = list.selectedOptions[0];
     const category = selectedOption.dataset.category;
-    const deleteBtn = currentCatCard.querySelector("#deleteBtn");
-    const editBtn = currentCatCard.querySelector("#editBtn");
-    const viewAllBtn = currentCatCard.querySelector("#viewBtn");
+    const editBtn = currentCatCard.querySelector("#editbtn");
+    const deleteBtn = currentCatCard.querySelector("#deletebtn");
+    const viewAllBtn = currentCatCard.querySelector("#viewbtn");
 
+    //for category card
     if (selectedOption.id === "Category-total") {
-      expenseArr = expenseArr.filter((item) => item.id !== id);
       const deletedOption = list.querySelector(`[id="${id}"]`);
-      const remainingExp = expenseArr.filter(
-        (item) => item.category === category,
-      );
-      if (!remainingExp.length) {
+      expenseArr = expenseArr.filter((item) => item.id !== id);
+
+      if (!findRemaining(category).length) {
         tableWrapper.remove();
         currentCatCard.remove();
         removeCategoryOptions(category);
+        destroyChart();
       } else {
         row.remove();
         deletedOption.remove();
@@ -902,24 +926,29 @@ function deleteExpRow(delBtn, currentCatCard) {
       expenseArr = expenseArr.filter((item) => item.id !== id);
       tableWrapper.remove();
       selectedOption.remove();
-      if (list.options.length === 1) {
+      if (!findRemaining(category).length) {
         currentCatCard.remove();
         removeCategoryOptions(category);
+        destroyChart();
       } else {
-        viewBtn.disabled = false;
-        delBtn.disabled = false;
-        editBtn.disabled = false;
         list.disabled = false;
         list.selectedIndex = 0;
         list.dispatchEvent(new Event("change", { bubbles: true }));
+        viewAllBtn.disabled = false;
+        editBtn.disabled = false;
+        deleteBtn.disabled = false;
       }
     }
 
     setLocal("expense", expenseArr);
     updateUI();
-  } else {
-    return;
   }
+}
+
+//find id any remaning exp exists
+
+function findRemaining(category) {
+  return expenseArr.filter((item) => item.category === category);
 }
 
 //view-all card rendered
@@ -1188,6 +1217,7 @@ function delCategory(list, selectedOption, wrapper) {
     removeCategoryOptions(category);
     setLocal("expense", expenseArr);
     updateUI();
+    destroyChart();
   } else {
     return;
   }
@@ -1232,9 +1262,6 @@ function removeCategoryOptions(category) {
   if (chartFilterOptions) {
     chartFilterOptions.remove();
   }
-
-  destroyChart();
-
 }
 
 //function to remove chart from DOM
