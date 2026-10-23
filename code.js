@@ -71,6 +71,7 @@ function updateUI() {
   monthTExp();
   renderTotChart(); //Total expense chart Updated
   renderCatChart(); //Category chart Updated
+  updateSearch(); //search result updated if exist
 }
 
 //dark mode
@@ -567,6 +568,7 @@ function createViewAllCard(filteredArr, currentCatCard, source) {
 
   const wrapperDiv = document.createElement("div"); //parent
   wrapperDiv.className = "viewallWrapper";
+  wrapperDiv.dataset.source = source;
 
   const headDiv = document.createElement("div"); //Child 1
   headDiv.className = "head-div";
@@ -1064,18 +1066,11 @@ function cancelEdit(editWrapper, context) {
     editWrapper.remove();
   }
 
-  // console.log(context.type);
-  // console.log(context.source);
-
   if (context.source === "search") {
     operationOnBtn(context.currentCard, false);
   }
 
-  // if(context.type === "table" && context.source === "category")
-
-  console.log(context.source);
-
-  if ((context.type === "category") && (context.type !== "table")) {
+  if (context.type === "category" && context.type !== "table") {
     operationOnBtn(context.currentCard, false);
   }
 }
@@ -1178,5 +1173,18 @@ function destroyChart() {
     if (categoryChartInstance) {
       categoryChartInstance.destroy();
     }
+  }
+}
+
+//funtion to update search result
+
+function updateSearch() {
+  const searchTable = document.querySelector(
+    ".viewallWrapper[data-source='search']",
+  );
+
+  if (searchTable) {
+    searchTable.remove();
+    searchBtn.dispatchEvent(new Event("click", { bubbles: true }));
   }
 }
