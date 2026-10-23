@@ -1,7 +1,8 @@
 import drawChart from "./chart.js";
 import createCategoryCard from "./createCategoryCard.js";
 
-const headerDateTime = document.querySelector("#pdate-time");
+const headerTime = document.querySelector("#time");
+const headerDate = document.querySelector("#date");
 const inpTitle = document.querySelector("#inp-title");
 const inpAmount = document.querySelector("#inp-amount");
 const inpCategory = document.querySelector("#inp-category");
@@ -18,7 +19,13 @@ const categoryChart = document.querySelector("#category-select");
 //date and time Updation
 
 setInterval(() => {
-  headerDateTime.innerText = new Date().toLocaleString();
+  headerTime.innerText = new Date().toLocaleTimeString();
+  headerDate.innerText = new Date().toLocaleDateString("en-US", {
+    weekday: "long",
+    month: "long",
+    day: "numeric",
+    year: "numeric",
+  });
 }, 1000);
 
 //Getting data from Local Storage...
