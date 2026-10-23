@@ -408,9 +408,7 @@ searchBtn.addEventListener("click", (e) => {
     alert("No result found");
     return;
   }
-  const resultCat = filteredArr[0].category;
-  const currentCatCard = disWrapper.querySelector(`.${resultCat}`);
-  const card = createViewAllCard(filteredArr, currentCatCard);
+  const card = createViewAllCard(filteredArr, null, "search");
   const currentCard = e.target.closest(".transaction-controls");
   if (card) {
     currentCard.after(card);
@@ -528,7 +526,7 @@ disWrapper.addEventListener("change", (e) => {
     time = exp.time;
   }
 
-  amountEl.innerText = `₹ ${expense}`;
+  amountEl.innerText = `₹ ${expense.toFixed(2)}`;
   timeEl.innerText = new Date(time).toLocaleString();
 });
 
@@ -560,7 +558,7 @@ function viewAllExp(viewAllBtn) {
 
 //View-all card created
 
-function createViewAllCard(filteredArr, currentCatCard) {
+function createViewAllCard(filteredArr, currentCatCard, source) {
   const isExisted = document.querySelector(".viewallWrapper");
   if (isExisted) {
     alert("One ViewAll card is already opened. Kindly close one");
@@ -703,13 +701,13 @@ function createViewAllCard(filteredArr, currentCatCard) {
 
   table.appendChild(tbody);
   tableWrapper.appendChild(table);
-  attachEventOnTable(table);
+  attachEventOnTable(table, source);
   wrapperDiv.appendChild(tableWrapper);
   attachEventOnViewAllCard(wrapperDiv, currentCatCard);
   return wrapperDiv;
 }
 
-//event on button in view all card
+// event on button in view all card
 
 function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
   tableWrapper.addEventListener("click", (e) => {
@@ -725,13 +723,8 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
     } else if (closeBtn) {
       if (currentCatCard) {
         const viewBtn = currentCatCard.querySelector("#viewbtn");
-        const list = currentCatCard.querySelector("#expenseSelect");
-        const editBtn = currentCatCard.querySelector("#editbtn");
-        const deleteBtn = currentCatCard.querySelector("#deletebtn");
-        list.disabled = false;
-        editBtn.disabled = false;
-        deleteBtn.disabled = false;
         viewBtn.style.visibility = "visible";
+        operationOnBtn(currentCatCard, false);
       }
       tableWrapper.remove();
 
@@ -744,7 +737,7 @@ function attachEventOnViewAllCard(tableWrapper, currentCatCard) {
 
 //event on table action buttons in viewAll Card
 
-function attachEventOnTable(table) {
+function attachEventOnTable(table, source) {
   table.addEventListener("click", (e) => {
     const editBtn = e.target.closest("#viewall-edit-btn");
     const delBtn = e.target.closest("#viewall-del-btn");
@@ -762,7 +755,7 @@ function attachEventOnTable(table) {
     );
     if (currentCard) {
       if (editBtn) {
-        editExpRow(editBtn, currentCard);
+        editExpRow(editBtn, currentCard, source);
       } else if (delBtn) {
         deleteExpRow(delBtn, currentCard);
       }
@@ -772,7 +765,7 @@ function attachEventOnTable(table) {
 
 //Edit function in view all table
 
-function editExpRow(editBtn, currentCatCard) {
+function editExpRow(editBtn, currentCatCard, source) {
   const row = editBtn.closest("tr");
   const tableWrapper = row.closest(".tableWrapper");
   const id = Number(row.dataset.id);
@@ -784,9 +777,13 @@ function editExpRow(editBtn, currentCatCard) {
       type: "table",
       currentCard: currentCatCard,
       row: row,
+      source,
     });
 
     if (card) {
+      if (source === "search") {
+        operationOnBtn(currentCatCard, true);
+      }
       tableWrapper.after(card);
     }
   }
@@ -861,7 +858,7 @@ function renderedViewAllCard(viewAllBtn) {
     });
   }
 
-  const card = createViewAllCard(filteredArr, currentCatCard);
+  const card = createViewAllCard(filteredArr, currentCatCard, "category-card");
 
   if (card) {
     viewAllBtn.style.visibility = "hidden";
@@ -883,8 +880,6 @@ function editExp(editBtn) {
 
   const currentCard = editBtn.closest(".exp-dis");
   const list = currentCard.querySelector("#expenseSelect");
-  const deleteBtn = currentCard.querySelector("#deletebtn");
-  const viewAllBtn = currentCard.querySelector("#viewbtn");
   const id = list.selectedOptions[0].id;
 
   if (id === "Category-total") {
@@ -894,12 +889,11 @@ function editExp(editBtn) {
 
   const item = expenseArr.find((item) => item.id == id);
 
-  list.disabled = true;
-  deleteBtn.disabled = true;
-  viewAllBtn.disabled = true;
+  operationOnBtn(currentCard, true);
   const card = createEditCard(item, {
     type: "category",
     currentCard: currentCard,
+    source: "category-card",
   });
 
   if (card) {
@@ -995,8 +989,6 @@ function attactEvtOnEditCard(editWrapper, context) {
       saveEdit(editWrapper, context);
     } else if (cancleBtn) {
       cancelEdit(editWrapper, context);
-    } else if (delBtn) {
-      deleteEdit(delBtn);
     }
   });
 }
@@ -1004,12 +996,10 @@ function attactEvtOnEditCard(editWrapper, context) {
 //function on save button in Edit card
 
 function saveEdit(editWrapper, context) {
-  let list, deleteBtn, viewAllBtn;
+  let list;
 
   if (context.currentCard) {
     list = context.currentCard.querySelector("#expenseSelect");
-    deleteBtn = context.currentCard.querySelector("#deletebtn");
-    viewAllBtn = context.currentCard.querySelector("#viewbtn");
   }
 
   const editTitleInp = editWrapper.querySelector("#edit-title");
@@ -1037,9 +1027,7 @@ function saveEdit(editWrapper, context) {
       item = findItem(id);
       if (!item) return;
       selectedOption.innerText = title;
-      list.disabled = false;
-      viewAllBtn.disabled = false;
-      deleteBtn.disabled = false;
+      operationOnBtn(context.currentCard, false);
     } else {
       const rowTitle = context.row.querySelector("[data-field='title']");
       const rowAmount = context.row.querySelector("[data-field='amount']");
@@ -1052,6 +1040,10 @@ function saveEdit(editWrapper, context) {
       if (!item) return;
       rowTitle.innerText = title;
       rowAmount.innerText = amount;
+
+      if (context.source === "search") {
+        operationOnBtn(context.currentCard, false);
+      }
     }
 
     item.title = title;
@@ -1060,7 +1052,6 @@ function saveEdit(editWrapper, context) {
     if (list) {
       list.dispatchEvent(new Event("change", { bubbles: true }));
     }
-
     editWrapper.remove();
     updateUI();
   }
@@ -1073,13 +1064,19 @@ function cancelEdit(editWrapper, context) {
     editWrapper.remove();
   }
 
-  if (context.type === "category") {
-    const list = context.currentCard.querySelector("#expenseSelect");
-    const deleteBtn = context.currentCard.querySelector("#deletebtn");
-    const viewAllBtn = context.currentCard.querySelector("#viewbtn");
-    list.disabled = false;
-    deleteBtn.disabled = false;
-    viewAllBtn.disabled = false;
+  // console.log(context.type);
+  // console.log(context.source);
+
+  if (context.source === "search") {
+    operationOnBtn(context.currentCard, false);
+  }
+
+  // if(context.type === "table" && context.source === "category")
+
+  console.log(context.source);
+
+  if ((context.type === "category") && (context.type !== "table")) {
+    operationOnBtn(context.currentCard, false);
   }
 }
 
@@ -1090,13 +1087,13 @@ function deleteExp(delBtn) {
   const list = wrapper.querySelector("#expenseSelect");
   const selectedOption = list.selectedOptions[0];
   if (selectedOption.id === "Category-total") {
-    delCategory(list, selectedOption, wrapper);
+    delCategory(selectedOption, wrapper);
   } else {
     delSingleExp(list, selectedOption, wrapper);
   }
 }
 
-function delCategory(list, selectedOption, wrapper) {
+function delCategory(selectedOption, wrapper) {
   if (confirm("Are you sure you want to delete this entire category")) {
     expenseArr = expenseArr.filter(
       (item) => item.category !== selectedOption.dataset.category,
@@ -1152,6 +1149,20 @@ function removeCategoryOptions(category) {
   if (chartFilterOptions) {
     chartFilterOptions.remove();
   }
+}
+
+//fucntion to enable/disable button of category card
+
+function operationOnBtn(currentCatCard, value) {
+  const list = currentCatCard.querySelector("#expenseSelect");
+  const CategoryeditBtn = currentCatCard.querySelector("#editbtn");
+  const deleteBtn = currentCatCard.querySelector("#deletebtn");
+  const viewAllBtn = currentCatCard.querySelector("#viewbtn");
+
+  list.disabled = value;
+  viewAllBtn.disabled = value;
+  CategoryeditBtn.disabled = value;
+  deleteBtn.disabled = value;
 }
 
 //function to remove chart from DOM

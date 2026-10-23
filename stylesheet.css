@@ -750,7 +750,7 @@ canvas {
 }
 
 .list:disabled,
-.viewbtn:disabled,
+#viewbtn:disabled,
 .editExp:disabled,
 .delete-btn:disabled {
   cursor: not-allowed;
