@@ -166,7 +166,6 @@ body {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  transition: 100ms ease-in-out;
   max-width: 4rem;
   width: 100%;
 }
@@ -214,6 +213,24 @@ h2 {
   gap: 1rem;
   background-color: var(--card-color);
   color: var(--text-color);
+}
+
+.head2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-add {
+  background-color: transparent;
+  border: none;
+  max-width: 4rem;
+  width: 100%;
+  cursor: pointer;
+}
+
+.close-add img {
+  width: 100%;
 }
 
 .user-inputs {
@@ -267,7 +284,6 @@ h2 {
   border-radius: 5px;
   cursor: pointer;
   border: none;
-  transition: 100ms ease-in-out;
 }
 
 .add-btn:hover,
@@ -285,7 +301,6 @@ h2 {
   color: var(--primary-color);
   cursor: pointer;
   border: none;
-  transition: 100ms ease-in-out;
   position: fixed;
   right: 8rem;
   bottom: 8rem;
@@ -668,7 +683,6 @@ canvas {
   width: 4.5rem;
   border: none;
   background-color: transparent;
-  transition: ease-in-out 100ms;
   object-fit: contain;
 }
 
@@ -686,7 +700,9 @@ canvas {
 .viewall-btn:active,
 .viewall-action-btn:active,
 .footer-btn:active,
-.searchbtn:active {
+.searchbtn:active,
+.close-add:active {
+  transition: 300ms ease-in-out;
   scale: 95%;
 }
 
@@ -741,7 +757,6 @@ canvas {
   background-color: transparent;
   border: none;
   cursor: pointer;
-  transition: 100ms ease-in-out;
 }
 
 .edit-icons {

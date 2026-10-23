@@ -223,6 +223,20 @@ floatingBtn.addEventListener("click", () => {
   addSec.classList.remove("hidden");
 });
 
+//function to close Add section
+
+const closeAddBtn = document.querySelector("#closeadd");
+closeAddBtn.addEventListener("click", () => {
+  floatingBtn.classList.remove("hidden");
+  addSec.classList.add("hidden");
+
+  inpAmount.value = "";
+  inpTitle.value = "";
+  inpCategory.selectedIndex = 0;
+  inpPaymentType.selectedIndex = 0;
+  inpComment.value = "";
+});
+
 //total expense display
 
 function totalExpdis() {
@@ -417,7 +431,12 @@ searchBtn.addEventListener("click", (e) => {
   const searchField = e.target
     .closest(".search-div")
     .querySelector("#searchExp");
-  let filteredArr = getFilteredArr(searchField.value.trim().toLowerCase());
+  const value = searchField.value.trim();
+  if (value === "") {
+    alert("please enter a valid value");
+    return;
+  }
+  let filteredArr = getFilteredArr(value.toLowerCase());
   if (!filteredArr.length) {
     alert("No result found");
     return;
