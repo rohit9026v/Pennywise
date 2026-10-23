@@ -25,7 +25,9 @@ setInterval(() => {
 
 function getExpense() {
   try {
-    return JSON.parse(localStorage.getItem("expense")) || [];
+    const expArr = JSON.parse(localStorage.getItem("expense")) || [];
+
+    return Array.isArray(expArr) ? expArr : [];
   } catch (error) {
     alert(`Something went wrong: ${error.message}`);
     return [];
@@ -79,7 +81,14 @@ function updateUI() {
 const darkBtn = document.querySelector("#dark-btn");
 
 function getDark() {
-  return JSON.parse(localStorage.getItem("isDark")) ?? null;
+  try {
+    const darkValue = JSON.parse(localStorage.getItem("isDark")) ?? null;
+
+    return typeof darkValue === "boolean" ? darkValue : false;
+  } catch (error) {
+    console.log(`Something went wrong: ${error.message}`);
+    return false;
+  }
 }
 
 if (getDark()) {
@@ -338,8 +347,12 @@ controlSec.addEventListener("change", (e) => {
   }
 
   if (filter) {
+    const sorting = controlSec.querySelector("#sort-by");
+    sorting.selectedIndex = 0;
     changedFilter();
   } else if (sortSelect) {
+    const filterSelect = controlSec.querySelector("#fil-category");
+    filterSelect.selectedIndex = 0;
     sortBy(sortSelect);
   }
 });
@@ -409,6 +422,15 @@ searchBtn.addEventListener("click", (e) => {
     alert("No result found");
     return;
   }
+
+  const isTableExists = document.querySelector(
+    ".viewallWrapper[data-source='search']",
+  );
+
+  if (isTableExists) {
+    isTableExists.remove();
+  }
+
   const card = createViewAllCard(filteredArr, null, "search");
   const currentCard = e.target.closest(".transaction-controls");
   if (card) {
@@ -661,7 +683,7 @@ function createViewAllCard(filteredArr, currentCatCard, source) {
     bodytr.appendChild(titleTd);
 
     const amountTd = document.createElement("td");
-    amountTd.innerText = item.expense;
+    amountTd.innerText = item.expense.toFixed(2);
     amountTd.dataset.field = "amount";
     bodytr.appendChild(amountTd);
 
