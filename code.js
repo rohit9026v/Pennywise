@@ -71,7 +71,7 @@ function updateUI() {
   monthTExp();
   renderTotChart(); //Total expense chart Updated
   renderCatChart(); //Category chart Updated
-  updateSearch(); //search result updated if exist
+  updateSearch(); //search result updated if exist in DOM
 }
 
 //dark mode
